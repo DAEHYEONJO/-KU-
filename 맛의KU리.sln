@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "맛의KU리", "맛의KU리\맛의KU리.vcxproj", "{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Debug|x64.ActiveCfg = Debug|x64
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Debug|x64.Build.0 = Debug|x64
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Debug|x86.ActiveCfg = Debug|Win32
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Debug|x86.Build.0 = Debug|Win32
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Release|x64.ActiveCfg = Release|x64
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Release|x64.Build.0 = Release|x64
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Release|x86.ActiveCfg = Release|Win32
+		{5A0ACD41-3F1C-4C04-B1D8-0848D506D617}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7995F541-5385-4E85-AD25-B261F2DCFF5F}
+	EndGlobalSection
+EndGlobal

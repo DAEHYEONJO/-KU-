@@ -1,0 +1,16 @@
+#include <iostream>
+#include <regex>
+#include <string>
+using namespace std;
+
+int main() {
+	regex re2("^([a-zA-Z]+[0-9]).*$");
+
+	string id = "";
+	getline(cin, id);
+	if (regex_match(id, re2))
+		cout << "match" << endl;
+	else
+		cout << "not match" << endl;
+	return 0;
+}
