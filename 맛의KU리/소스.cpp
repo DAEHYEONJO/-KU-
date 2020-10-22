@@ -12,5 +12,6 @@ int main() {
 		cout << "match" << endl;
 	else
 		cout << "not matchdsfds" << endl;
+	cout << "it is testet" << endl;
 	return 0;
 }
