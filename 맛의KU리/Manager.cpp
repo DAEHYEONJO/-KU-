@@ -2,6 +2,17 @@
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:4996)
 
+static void trim(string& s);
+bool yesorno() {
+	string c;
+	cout << "yes or no?: ";
+	getline(cin, c);
+	if (c == "y") return true;
+	else return false;
+}
+
+string V_address[10] = { "hwayang1dong", "hwayang2dong", "hwayang3dong", "hwayang4dong", "hwayang5dong", "hwayang6dong", "hwayang7dong", "hwayang8dong", "hwayang9dong", "hwayang10dong" };
+
 int Manager::signUp()
 {
 	//id 입력받기 -> 제대로입력, 중복검사 -> pw 입력받기 -> 4자리숫자 입력 조건 충족 -> text파일에 저장하기
@@ -14,9 +25,7 @@ int Manager::signUp()
 	while (true) {//id roof
 		cout << "id는 숫자와 영문자 조합이며, 6자리~10자리로 입력하세요\nid : ";
 		getline(cin, test_id);
-		if (isSpace(test_id)) {
-			continue;
-		}
+		if (isSpace(test_id)) continue;
 		else {
 			if (!isQuit(test_id)) {//quit 아니면
 				if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
@@ -81,13 +90,11 @@ int Manager::logIn()
 	regex idChecker1("^[a-zA-Z0-9].*$");//영어먼저시작하는경우
 	//regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하겹치다는경우
 
-	while (true) {//id roof
+	while (true) {//로그인 성공하면 current_user에 로그인한 유저 정보 저장됨
 		cout << "id : ";
 		string test_id, test_pw;
 		getline(cin, test_id);
-		if (isSpace(test_id)) {
-			continue;
-		}
+		if (isSpace(test_id)) continue;
 		else {
 			if (!isQuit(test_id)) {
 				if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
@@ -130,11 +137,11 @@ int Manager::logIn()
 					}
 				}
 				else {
-					cout << "id 길이 조건 오류\n" << endl;
+				cout << "id 길이 조건 오류\n" << endl;
 				}
 			}
 			else {
-				break;
+			break;
 			}
 		}
 	}
@@ -144,22 +151,22 @@ int Manager::logIn()
 void Manager::loginMenu()
 {
 	int c = 0;
-	while (c!=4) {
-		
+	while (c != 4) {
+
 		cout << "1. 로그인\t2. 회원가입\n>>보기선택 : ";
 		string test_menu = "";
 		regex menuChecker("^(1|2){1}$");
 
 		getline(cin, test_menu);
-	
-		if (regex_match(test_menu, menuChecker)){//입력값이 1 또는 2이면 진행
-			const char* buf=test_menu.c_str();//char* buf
+
+		if (regex_match(test_menu, menuChecker)) {//입력값이 1 또는 2이면 진행
+			const char* buf = test_menu.c_str();//char* buf
 			int menu = atoi(buf);//char* to int
 			switch (menu) {
 			case 1: {
 				if (logIn()) c = mainMenu();
 			}
-				break;
+				  break;
 			case 2: {
 				if (signUp())
 					if (logIn()) c = mainMenu();
@@ -211,9 +218,61 @@ int Manager::mainMenu()
 
 void Manager::registerRestaurant()
 {
-	cout << "카테고리/식당이름/식당주소" << endl << "입력하세요<<";
-	string data;
-	getline(cin, data);
+	while (true) {
+		cout << "카테고리/식당이름/식당주소" << endl << "입력하세요<<";
+		string data, category, R_name, R_address;
+		char* data_buff = new char[15];
+		getline(cin, data);
+		strcpy(data_buff, data.c_str());
+		trim(data);//앞뒤공백은 자르기
+			if (!isQuit(data)) {
+				category = string(strtok(data_buff, "/"));
+				R_name = string(strtok(NULL, "/"));
+				R_address = string(strtok(NULL, "/"));
+				
+
+				if (!(strcmp(category.c_str(), "japanese")==0 || strcmp(category.c_str(), "chinese")==0 || strcmp(category.c_str(), "korean")==0 || strcmp(category.c_str(), "western")==0))
+				{//카테고리 검사
+					cout << "카테고리 규칙위반 " << endl;
+					continue;
+				}
+
+				if(isSpace(R_name))//공백이 있다면 연속된 공백을 하나의 공백으로 바꿔야함
+				{//이름 검사
+					//모순 공백열이 trim에 의해 잘리면서 가운데 공백열이 존재할수 없게됨 
+				}
+
+				bool check = false;
+				for (int i = 0; i < 10; i++) {//주소검사
+					if (strcmp(R_address.c_str(), V_address[i].c_str())==0) {
+						check = true;
+						break;
+					}
+					else {
+						check = false;
+					}
+				}
+				if (!(check)) {
+					cout << "주소 규칙위반" << endl;
+					continue;
+				}
+				//모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
+				cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl ;
+				if (yesorno()) {
+					//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
+					current_user.restaurant.push_back(Restaurant(category, R_name, R_address));
+					cout << "등록완료" << endl;
+					return;
+				}
+				else {
+					continue;
+				}
+				
+
+
+			}
+			else return;
+	}
 
 }
 
@@ -277,4 +336,22 @@ Manager::Manager()
 
 Manager::~Manager()
 {
+}
+
+static void ltrim(string& s) {
+	s.erase(s.begin(), find_if(s.begin(), s.end(), [](unsigned char ch) {
+		return !isspace(ch);
+	}));
+}
+
+
+static void rtrim(string& s) {
+	s.erase(find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+		return !isspace(ch);
+	}).base(), s.end());
+}
+
+static void trim(string& s) {
+	ltrim(s);
+	rtrim(s);
 }
