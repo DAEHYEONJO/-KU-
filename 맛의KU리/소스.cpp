@@ -12,5 +12,6 @@ int main() {
 	cout << "it is testet" << endl;*/
 	cout << "hoyong" << endl;
 	cout << "hoyong2" << endl;
+	cout << "hihi" << endl;
 	return 0;
 }	
