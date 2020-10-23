@@ -11,7 +11,7 @@ int main() {
 	if (regex_match(id, re2))
 		cout << "match" << endl;
 	else
-		cout << "not matchdsfds" << endl;
-	cout << "it is testet" << endl;
+		cout << "not match" << endl;
+	cout << "it is testet hoyong" << endl;
 	return 0;
 }
