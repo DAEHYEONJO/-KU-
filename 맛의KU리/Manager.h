@@ -1,9 +1,11 @@
 #pragma once
 #include "User.h"
+
 class Manager
 {
 public:
 	vector<User> user;
+	User current_user;
 	int signUp();
 	int logIn();
 	void loginMenu();
@@ -12,6 +14,7 @@ public:
 	void searchRestaurant();
 	void readInfoTextFile();
 	bool isQuit(string str);
+	bool isSpace(string str);
 	Manager();
 	~Manager();
 };

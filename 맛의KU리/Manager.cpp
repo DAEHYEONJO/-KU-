@@ -1,4 +1,6 @@
 #include "Manager.h"
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable:4996)
 
 int Manager::signUp()
 {
@@ -6,123 +8,134 @@ int Manager::signUp()
 	//id, pw 입력 받을 때 quit 입력시 메인메뉴로 돌아가기
 	/**/
 	string test_id, test_pw;
-	regex idChecker1("^([a-zA-Z]+[0-9]).*$");//영어먼저시작하는경우
-	regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하는경우
+	regex idChecker1("^[a-zA-Z0-9].*$");//알파벳/숫자인경우
+	//regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하는경우
 
 	while (true) {//id roof
 		cout << "id는 숫자와 영문자 조합이며, 6자리~10자리로 입력하세요\nid : ";
 		getline(cin, test_id);
-		if (!isQuit(test_id)) {//quit 아니면
-			if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
-				if (regex_match(test_id, idChecker1) || regex_match(test_id, idChecker2)) {
-					cout << "조건맞음\n" << endl;
-					readInfoTextFile();//저장되어있는거 읽어오기.
-					int count = 0;
-					for (count = 0; count < user.size(); count++) {//text file 중복검사
-						cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
-						if (!strcmp(user[count].id.c_str(), test_id.c_str())) break;
-					}
-					if (count == user.size()) {
-						cout << "중복되는 id 없음\n" << endl;
-						while (true){//pw roof
-							cout << "pw는 숫자만으로 이루어져 있으며, 4자리로 입력하세요\npw : ";
-							regex pwChecker("^[0-9]{4}$");
-							getline(cin, test_pw);//pw입력받기
+		if (isSpace(test_id)) {
+			continue;
+		}
+		else {
+			if (!isQuit(test_id)) {//quit 아니면
+				if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
+					if (regex_match(test_id, idChecker1)) {
+						cout << "조건맞음\n" << endl;
+						readInfoTextFile();//저장되어있는거 읽어오기.
+						int count = 0;
+						for (count = 0; count < user.size(); count++) {//text file 중복검사
+							cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
+							if (!strcmp(user[count].id.c_str(), test_id.c_str())) break;
+						}
+						if (count == user.size()) {
+							cout << "중복되는 id 없음\n" << endl;
+							while (true) {//pw roof
+								cout << "pw는 숫자만으로 이루어져 있으며, 4자리로 입력하세요\npw : ";
+								regex pwChecker("^[0-9]{4}$");
+								getline(cin, test_pw);//pw입력받기
 
-							if (regex_match(test_pw, pwChecker)) {
-								cout << "아이디 패스워드 모두 완료\n" << endl;
-								//info.txt에 해당 아이디 패스워드 추가하기.
-								ofstream writeFile;
-								writeFile.open("info.txt",std::ofstream::out| std::ofstream::app);//쓰기모드, 이어서 추가하기
-								if (writeFile.is_open()) {
-									string merge = test_id + "/" + test_pw+"\n";
-									writeFile.write(merge.c_str(),merge.size());
+								if (regex_match(test_pw, pwChecker)) {
+									cout << "아이디 패스워드 모두 완료\n" << endl;
+									//info.txt에 해당 아이디 패스워드 추가하기.
+									ofstream writeFile;
+									writeFile.open("info.txt", std::ofstream::out | std::ofstream::app);//쓰기모드, 이어서 추가하기
+									if (writeFile.is_open()) {
+										string merge = test_id + "/" + test_pw + "\n";
+										writeFile.write(merge.c_str(), merge.size());
+									}
+									else {
+										cout << "파일 오픈 오류\n" << endl;
+									}
+									writeFile.close();
+									readInfoTextFile();//새로 추가되었으니 user벡터에 추가해주기
+									return 1;
 								}
 								else {
-									cout << "파일 오픈 오류\n" << endl;
+									cout << "pw 조건 오류\n" << endl;
 								}
-								writeFile.close();
-								readInfoTextFile();//새로 추가되었으니 user벡터에 추가해주기
-								return 1;
 							}
-							else {
-								cout << "pw 조건 오류\n" << endl;
-							}
+						}
+						else {
+							cout << "id 중복\n" << endl;
 						}
 					}
 					else {
-						cout << "id 중복\n" << endl;
+						cout << "영문자와 숫자를 포함하여 주세요\n" << endl;
 					}
 				}
 				else {
-					cout << "영문자와 숫자를 포함하여 주세요\n" << endl;
+					cout << "id 길이 조건 오류\n" << endl;
 				}
 			}
 			else {
-				cout << "id 길이 조건 오류\n" << endl;
+				return 0;
 			}
 		}
-		else {
-			break;
-		}
 	}
-	return 0;
 }
 
 int Manager::logIn()
 {
 	cout << "로그인이다\n" << endl;
-	regex idChecker1("^([a-zA-Z]+[0-9]).*$");//영어먼저시작하는경우
-	regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하겹치다는경우
+	regex idChecker1("^[a-zA-Z0-9].*$");//영어먼저시작하는경우
+	//regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하겹치다는경우
 
 	while (true) {//id roof
 		cout << "id : ";
 		string test_id, test_pw;
 		getline(cin, test_id);
-		if (!isQuit(test_id)) {
-			if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
-				if (regex_match(test_id, idChecker1) || regex_match(test_id, idChecker2)) {
-					readInfoTextFile();//저장되어있는거 읽어오기.
-					int count = 0;
-					for (count = 0; count < user.size(); count++) {//text file 중복검사
-						cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
-						if (!strcmp(user[count].id.c_str(), test_id.c_str())) break;
-					}
-					if (count == user.size()) {//중복된 아이디 없으면 다시입력받기
-						cout << "중복된 아이디 없음.\n" << endl;
-					}
-					else {
-						while (true) {
-							cout << "pw : ";
-							regex pwChecker("^[0-9]{4}$");
-							getline(cin, test_pw);//pw입력받기
+		if (isSpace(test_id)) {
+			continue;
+		}
+		else {
+			if (!isQuit(test_id)) {
+				if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
+					if (regex_match(test_id, idChecker1)) {
+						readInfoTextFile();//저장되어있는거 읽어오기.
+						int count = 0;
+						for (count = 0; count < user.size(); count++) {//text file 중복검사
+							cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
+							if (!strcmp(user[count].id.c_str(), test_id.c_str())) break;
+						}
+						if (count == user.size()) {//중복된 아이디 없으면 다시입력받기
+							cout << "중복된 아이디 없음.\n" << endl;
+						}
+						else {
+							while (true) {
+								cout << "pw : ";
+								regex pwChecker("^[0-9]{4}$");
+								getline(cin, test_pw);//pw입력받기
 
-							if (regex_match(test_pw, pwChecker)) {//pw형식 옳바름
-								if (!strcmp(user[count].pw.c_str(), test_pw.c_str())) {
-									//로그인성공
-									cout << "로그인 성공!\n" << endl;
-									return 1;
+								if (regex_match(test_pw, pwChecker)) {//pw형식 옳바름
+									if (!strcmp(user[count].pw.c_str(), test_pw.c_str())) {
+										//로그인성공
+										current_user = User(user[count].id, user[count].pw);
+										//로그인 성공한 계정 접속
+										cout << "로그인 성공!\n id: " << user[count].id << endl;
+										return 1;
+									}
+									else {
+										cout << "비밀번호가 일치하지 않습니다.\n" << endl;
+									}
+
 								}
 								else {
-									cout << "비밀번호가 일치하지 않습니다.\n" << endl;
+									cout << "옳바르지 않은 pw형식\n" << endl;
 								}
-								
 							}
-							else {
-								cout << "옳바르지 않은 pw형식\n" << endl;
-							}
-						}
-						
 
+
+						}
 					}
+				}
+				else {
+					cout << "id 길이 조건 오류\n" << endl;
 				}
 			}
 			else {
-				cout << "id 길이 조건 오류\n" << endl;
+				break;
 			}
-		}
-		else {
-			break;
 		}
 	}
 	return 0;
@@ -178,7 +191,7 @@ int Manager::mainMenu()
 			else {
 				switch (menu) {
 				case 1:
-
+					registerRestaurant();
 					break;
 				case 2:
 					break;
@@ -198,6 +211,10 @@ int Manager::mainMenu()
 
 void Manager::registerRestaurant()
 {
+	cout << "카테고리/식당이름/식당주소" << endl << "입력하세요<<";
+	string data;
+	getline(cin, data);
+
 }
 
 void Manager::searchRestaurant()
@@ -238,6 +255,18 @@ void Manager::readInfoTextFile()
 bool Manager::isQuit(string str)
 {
 	if (!strcmp(str.c_str(), "quit")) return true;
+	return false;
+}
+
+bool Manager::isSpace(string str)
+{
+	for (int i = 0; i < str.length(); i++) {
+		const char* check = str.c_str();
+		if (isspace(check[i])) {
+			cout << "공백없이 입력해주세요" << endl;
+			return true;
+		}
+	}
 	return false;
 }
 
