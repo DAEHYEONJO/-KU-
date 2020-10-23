@@ -1,10 +1,7 @@
-#include <iostream>
-#include <regex>
-#include <string>
-using namespace std;
+#include "Manager.h"
 
 int main() {
-	regex re2("^([a-zA-Z]+[0-9]).*$");
+	/*regex re2("^([a-zA-Z]+[0-9]).*$");
 
 	string id = "";
 	getline(cin, id);
@@ -12,6 +9,6 @@ int main() {
 		cout << "match" << endl;
 	else
 		cout << "not matchdsfds" << endl;
-	cout << "it is testet" << endl;
+	cout << "it is testet" << endl;*/
 	return 0;
 }
