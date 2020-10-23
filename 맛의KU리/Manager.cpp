@@ -224,7 +224,7 @@ void Manager::registerRestaurant()
 		char* data_buff = new char[15];
 		getline(cin, data);
 		strcpy(data_buff, data.c_str());
-		trim(data);//앞뒤공백은 자르기
+		//trim(data);//앞뒤공백은 자르기
 			if (!isQuit(data)) {
 				category = string(strtok(data_buff, "/"));
 				R_name = string(strtok(NULL, "/"));
