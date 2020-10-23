@@ -4,12 +4,14 @@ class Manager
 {
 public:
 	vector<User> user;
-	void signUp();
-	void logIn();
-	void mainMenu();
-	void addRestaurant();
+	int signUp();
+	int logIn();
+	void loginMenu();
+	int mainMenu();
+	void registerRestaurant();
 	void searchRestaurant();
-
+	void readInfoTextFile();
+	bool isQuit(string str);
 	Manager();
 	~Manager();
 };

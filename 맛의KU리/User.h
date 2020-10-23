@@ -11,6 +11,7 @@ public:
 	string pw;
 	vector<Restaurant> restaurant;
 	User();
+	User(string id, string pw);
 	~User();
 };
 
