@@ -6,10 +6,20 @@
 static void trim(string & s);
 bool yesorno() {
 	string c;
-	cout << "yes or no?: ";
-	getline(cin, c);
-	if (c == "y") return true;
-	else return false;
+	regex ynCheck("(y)|(n){1}$");
+	while (true) {
+		cout << "yes or no?: ";
+		getline(cin, c);
+
+		trim(c);
+
+		if (regex_match(c, ynCheck)) {
+			if (!strcmp(c.c_str(), "y")) return true;
+			else return false;//no인경우
+		}
+		//y 또는 n 입력 안했을때 다시 위로가서 입력받기
+	}
+	return false;
 }
 
 string V_address[10] = { "hwayang1dong", "hwayang2dong", "hwayang3dong", "hwayang4dong", "hwayang5dong", "hwayang6dong", "hwayang7dong", "hwayang8dong", "hwayang9dong", "hwayang10dong" };
@@ -219,10 +229,10 @@ int Manager::mainMenu()
 
 void Manager::registerRestaurant()
 {
+	string data, category, R_name, R_address;
+	char* data_buff = new char[15];
 	while (true) {
 		cout << "카테고리/식당이름/식당주소" << endl << "입력하세요<<";
-		string data, category, R_name, R_address;
-		char* data_buff = new char[15];
 		getline(cin, data);
 		strcpy(data_buff, data.c_str());
 		trim(data);//앞뒤공백은 자르기
@@ -234,19 +244,42 @@ void Manager::registerRestaurant()
 			trim(R_name);
 			trim(R_address);
 
+			//카테고리검사
 			if (!(strcmp(category.c_str(), "japanese") == 0 || strcmp(category.c_str(), "chinese") == 0 || strcmp(category.c_str(), "korean") == 0 || strcmp(category.c_str(), "western") == 0))
-			{//카테고리 검사
+			{
 				cout << "카테고리 규칙위반 " << endl;
 				continue;
 			}
-
-			if (true)//공백이 있다면 연속된 공백을 하나의 공백으로 바꿔야함
-			{//이름 검사
-
+			
+			//이름검사
+			vector<char*>v;
+			char* buf = new char[R_name.size()];
+			strcpy(buf, R_name.c_str());
+			char* ptr = strtok(buf, " \t");
+			while (ptr != nullptr) {
+				v.push_back(ptr);
+				ptr = strtok(NULL, " \t");
 			}
+			string result = "";
+			if (v.size() == 1) {
+				result = (string)v[0];
+			}
+			else {
+				for (int i = 0; i < v.size(); i++) {
+					if (i != v.size() - 1) {
+						result += (string)v[i] + " ";
+					}
+					else {
+						result += (string)v[i];
+					}
+				}
+			}
+			R_name = result;
 
+
+			//주소검사
 			bool check = false;
-			for (int i = 0; i < 10; i++) {//주소검사
+			for (int i = 0; i < 10; i++) {
 				if (strcmp(R_address.c_str(), V_address[i].c_str()) == 0) {
 					check = true;
 					break;
@@ -259,25 +292,18 @@ void Manager::registerRestaurant()
 				cout << "주소 규칙위반" << endl;
 				continue;
 			}
+
 			//모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
 			cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
 			if (yesorno()) {
 				//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
 				current_user.restaurant.push_back(Restaurant(category, R_name, R_address));
-
 				cout << "등록완료" << endl;
 				return;
 			}
-			else {
-				continue;
-			}
-
-
-
 		}
-		else return;
+		else { return; }
 	}
-
 }
 
 void Manager::searchRestaurant()
