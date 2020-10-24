@@ -224,12 +224,14 @@ void Manager::registerRestaurant()
 		char* data_buff = new char[15];
 		getline(cin, data);
 		strcpy(data_buff, data.c_str());
-		//trim(data);//앞뒤공백은 자르기
+		trim(data);//앞뒤공백은 자르기
 			if (!isQuit(data)) {
 				category = string(strtok(data_buff, "/"));
 				R_name = string(strtok(NULL, "/"));
 				R_address = string(strtok(NULL, "/"));
-				
+				trim(category);
+				trim(R_name);
+				trim(R_address);
 
 				if (!(strcmp(category.c_str(), "japanese")==0 || strcmp(category.c_str(), "chinese")==0 || strcmp(category.c_str(), "korean")==0 || strcmp(category.c_str(), "western")==0))
 				{//카테고리 검사
@@ -261,6 +263,7 @@ void Manager::registerRestaurant()
 				if (yesorno()) {
 					//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
 					current_user.restaurant.push_back(Restaurant(category, R_name, R_address));
+
 					cout << "등록완료" << endl;
 					return;
 				}
