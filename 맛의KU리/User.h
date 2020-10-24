@@ -2,6 +2,10 @@
 #include <iostream>
 #include <cstring>
 #include <ctype.h>
+#include <fstream>
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable:4996)
+
 #include "Restaurant.h"
 using namespace std;
 
@@ -14,5 +18,7 @@ public:
 	User();
 	User(string id, string pw);
 	~User();
+	void printMyRest();
+	void readRestTxtFIle();
 };
 
