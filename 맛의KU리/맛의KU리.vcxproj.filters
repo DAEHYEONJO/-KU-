@@ -49,7 +49,7 @@
     <Text Include="info.txt">
       <Filter>소스 파일</Filter>
     </Text>
-    <Text Include="..\..\..\..\..\Desktop\Restaurant.txt">
+    <Text Include="Restaurant.txt">
       <Filter>소스 파일</Filter>
     </Text>
   </ItemGroup>
