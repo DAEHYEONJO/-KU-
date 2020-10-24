@@ -40,6 +40,10 @@ int Manager::signUp()
                         cout << "pw는 숫자만으로 이루어져 있으며, 4자리로 입력하세요\npw : ";
                         regex pwChecker("^[0-9]{4}$");
                         getline(cin, test_pw);//pw입력받기
+                        if (!isin0to128(test_pw)) {
+                            cout << "한국어 입력 금지" << endl;
+                            continue;
+                        }
                         if (regex_match(test_pw, pwChecker)) {
                            cout << "아이디 패스워드 모두 완료\n" << endl;
                            //info.txt에 해당 아이디 패스워드 추가하기.
@@ -90,12 +94,17 @@ int Manager::logIn()
       cout << "id : ";
       string test_id, test_pw;
       getline(cin, test_id);
+      if (!isin0to128(test_pw)) {
+          cout << "한국어 입력 금지" << endl;
+          continue;
+      }
       if (isSpace(test_id)) continue;
       else {
          if (!isQuit(test_id)) {
             if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
                if (regex_match(test_id, idChecker1)) {
                   readInfoTextFile();//저장되어있는거 읽어오기.
+                  readRestTextFile();
                   int count = 0;
                   for (count = 0; count < user.size(); count++) {//text file 중복검사
                      cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
@@ -109,10 +118,29 @@ int Manager::logIn()
                         cout << "pw : ";
                         regex pwChecker("^[0-9]{4}$");
                         getline(cin, test_pw);//pw입력받기
+                        if (!isin0to128(test_pw)) {
+                            cout << "한국어 입력 금지" << endl;
+                            continue;
+                        }
                         if (regex_match(test_pw, pwChecker)) {//pw형식 옳바름
                            if (!strcmp(user[count].pw.c_str(), test_pw.c_str())) {
                               //로그인성공
+                              
                               current_user = new User(user[count].id, user[count].pw);
+                              if (user[count].restaurant.size() > 0) {
+                                  for (int i = 0; i < user[count].restaurant.size();i++) {
+                                      current_user->restaurant.push_back(Restaurant(user[count].restaurant[i].category,
+                                          user[count].restaurant[i].name,
+                                          user[count].restaurant[i].address));
+                                      cout << "현재유져 : " << current_user->restaurant[i].category
+                                          << current_user->restaurant[i].name
+                                          << current_user->restaurant[i].address << endl;
+                                  }
+                              }
+                              else {
+                                  cout << "아직 등록한 식당이 없어요\n\n\n" << endl;
+                              }
+                              
                               //로그인 성공한 계정 접속
                               cout << "로그인 성공!\n id: " << user[count].id << endl;
                               return 1;
@@ -154,6 +182,10 @@ void Manager::loginMenu()
       regex menuChecker("^(1|2){1}$");
 
       getline(cin, test_menu);
+      if (!isin0to128(test_menu)) {
+          cout << "한국어 입력 금지" << endl;
+          continue;
+      }
       if (regex_match(test_menu, menuChecker)) {//입력값이 1 또는 2이면 진행
          const char* buf = test_menu.c_str();//char* buf
          int menu = atoi(buf);//char* to int
@@ -185,6 +217,10 @@ bool Manager::yesorno()
    while (true) {
       cout << "yes or no?: ";
       getline(cin, c);
+      if (!isin0to128(c)) {
+          cout << "한국어 입력 금지" << endl;
+          continue;
+      }
       trim(c);
       if (regex_match(c, ynCheck)) {
          if (!strcmp(c.c_str(), "y")) return 1;
@@ -202,7 +238,10 @@ int Manager::mainMenu()
       regex menuChecker("^([1-4]){1}$");
       string test_menu = "";
       getline(cin, test_menu);
-
+      if (!isin0to128(test_menu)) {
+          cout << "한국어 입력 금지" << endl;
+          continue;
+      }
       if (regex_match(test_menu, menuChecker)) {
          const char* buf = test_menu.c_str();//char* buf
          int menu = atoi(buf);//char* to int
@@ -213,6 +252,7 @@ int Manager::mainMenu()
                registerRestaurant();
                break;
             case 2:
+                ManageRestaurant();
                break;
             case 3:
                break;
@@ -239,6 +279,10 @@ void Manager::registerRestaurant()
       cout << "카테고리/식당이름/식당주소" << endl << "입력하세요<<";
    //   data = "";
       getline(cin,data);
+      if (!isin0to128(data)) {
+          cout << "한국어 입력 금지" << endl;
+          continue;
+      }
       cout << "data : " << data << endl;
       cout << "datasize : " << data.size() << endl;
       data_buff = new char[data.size() + 1];
@@ -295,7 +339,6 @@ void Manager::registerRestaurant()
             continue;
          }
          else {
-            regex upperChecker("[A-Z]");
             for (int i = 0; i < R_name.size(); i++) {
                R_name[i] = tolower(R_name[i]);
             }
@@ -324,7 +367,19 @@ void Manager::registerRestaurant()
                }
             }
             R_name = result;
+            if (R_name.size() < 1 || R_name.size() > 15) {
+                cout << "길이 1~15" << endl;
+                continue;
+            }
             //텍스트파일에 식당이름 있나 없나 검사하기
+            for (int i = 0; i < user.size(); i++) {
+                for (int j = 0; j < user[i].restaurant.size(); j++) {
+                    if (!strcmp(user[i].restaurant[j].name.c_str(), R_name.c_str())) {
+                        cout << "중복된 식당 이름이 있습니다\n" << endl;
+                        break;
+                    }
+                }
+            }
          }
          regex adrChecker("[a-zA-Z0-9]+");//알파벳+숫자만입력
          if (!regex_match(R_address, adrChecker)) {
@@ -334,7 +389,6 @@ void Manager::registerRestaurant()
          else {
             bool check = false;
             for (int i = 0; i < 10; i++) {//주소검사
-               cout << "4??" << endl;
                if (strcmp(R_address.c_str(), V_address[i].c_str()) == 0) {
                   check = true;
                   break;
@@ -351,8 +405,20 @@ void Manager::registerRestaurant()
          
          //모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
          cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
-         if (yesorno()) {
-            //current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
+         if (yesorno()) {//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
+             ofstream writeRestaurant;
+
+             writeRestaurant.open("Restaurant.txt", std::ofstream::out | std::ofstream::app);//쓰기모드, 이어서 추가하기
+             if (writeRestaurant.is_open()) {
+                 string merge = current_user->id + "/" + category + "/" + R_name + "/" + R_address + "\n";
+                 writeRestaurant.write(merge.c_str(), merge.size());
+             }
+             else {
+                 cout << "파일 오픈 오류\n" << endl;
+             }
+             writeRestaurant.close();
+             readRestTextFile();
+
             current_user->restaurant.push_back(Restaurant(category, R_name, R_address));
             for (int i = 0; i < current_user->restaurant.size(); i++) {
                cout << "카테고리 : " << current_user->restaurant[i].category << "/이름 : " << current_user->restaurant[i].name << "/주소 : " << current_user->restaurant[i].address << endl;
@@ -361,7 +427,6 @@ void Manager::registerRestaurant()
             cout << "등록완료" << endl;
             return;
          }
-         cout << "5??" << endl;
       }
       else return;
    }
@@ -401,6 +466,73 @@ void Manager::readInfoTextFile()
       cout << "파일이 오픈되지 않음\n" << endl;
    }
    readFile.close();
+
+  
+}
+
+void Manager::readRestTextFile()
+{
+    ifstream readRestaurant;
+    char** temp_info_R = new char* [4];
+    for (int i = 0; i < 4; i++) {
+        temp_info_R[i] = new char[16];//그냥 크게 10으로 잡음
+    }
+    char* ptr = nullptr;
+    char readlineR[50];//한 줄 최대 50글자 id->10, /->3, 카테고리->8, 식당이름->15, 주소->13\n->1
+    readRestaurant.open("Restaurant.txt");
+    if (readRestaurant.is_open()) {
+        while (!readRestaurant.eof()) {
+            readRestaurant.getline(readlineR, 50);
+            if (!readRestaurant.eof()) {//eof일때 strtok안해줄라고
+                cout << readlineR << endl;
+
+                temp_info_R[0] = strtok(readlineR, "/");//id
+                temp_info_R[1] = strtok(NULL, "/");//category
+                temp_info_R[2] = strtok(NULL, "/");//식당이름
+                temp_info_R[3] = strtok(NULL, "/");//식당주소
+
+                for (int i = 0; i < user.size(); i++) {//회원가입은 했지만 식당 안등록한새끼들은 user객체에 식당없음
+                    if (!strcmp(user[i].id.c_str(), temp_info_R[0])) {
+                        user[i].restaurant.push_back(Restaurant(temp_info_R[1], temp_info_R[2], temp_info_R[3]));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    else {
+        cout << "Restaurant.txt not open\n\n" << endl;
+    }
+    readRestaurant.close();
+}
+
+void Manager::ManageRestaurant()
+{
+
+    while (true) {
+        int select;
+        cout << "<<식당 리스트>>" << endl;
+        current_user->printMyRest();
+        cout << "보기선택 : ";
+        cin >> select;
+        cin.ignore();//버퍼 제거 
+        if (select <= current_user->restaurant.size() + 1 && select >= 1) {
+            if (select == current_user->restaurant.size() + 1) return;
+            if (current_user->restaurant.at(select - 1).register_Status())
+                current_user->restaurant.at(select - 1).change_info();
+            else
+                current_user->restaurant.at(select - 1).more_info();
+        }
+        else {
+            cout << "다시 입력해 주세요\n\n" << endl;
+        }
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(INT_MAX, '\n');
+            cout << "다시 입력해주세요" << endl;
+
+        }
+    }
 }
 
 bool Manager::isin0to128(string str)
@@ -447,6 +579,7 @@ Manager::Manager()
       V_address[i] = "hwayang" + to_string(i + 1) + "dong";
       cout << V_address[i] << endl;
    }
+
 
 }
 

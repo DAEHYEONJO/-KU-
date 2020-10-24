@@ -15,7 +15,8 @@ public:
    void registerRestaurant();
    void searchRestaurant();
    void readInfoTextFile();
-   
+   void readRestTextFile();
+   void ManageRestaurant();
    bool isin0to128(string str);
    bool isQuit(string str);
    bool isSpace(string str);
