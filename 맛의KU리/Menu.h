@@ -5,14 +5,18 @@
 #include <regex>
 #include <cstdlib>
 #include <fstream>
-
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable:4996)
 using namespace std;
+
+static void trim(string& s);
+
 class Menu
 {
 public:
 	int m_price;
 	string m_name;
-
+	static void inputTest();
 	Menu(int price, string name);
 	~Menu();
 };

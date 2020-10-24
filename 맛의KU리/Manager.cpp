@@ -4,13 +4,13 @@
 #pragma warning(disable:4996)
 
 static void trim(string & s);
+
 bool yesorno() {
 	string c;
 	regex ynCheck("(y)|(n){1}$");
 	while (true) {
 		cout << "yes or no?: ";
 		getline(cin, c);
-
 		trim(c);
 
 		if (regex_match(c, ynCheck)) {
@@ -30,7 +30,7 @@ int Manager::signUp()
 	//id, pw 입력 받을 때 quit 입력시 메인메뉴로 돌아가기
 	/**/
 	string test_id, test_pw;
-	regex idChecker1("^[a-zA-Z0-9].*$");//알파벳/숫자인경우
+	regex idChecker1("[a-zA-Z0-9]+");//알파벳/숫자인경우
 	//regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하는경우
 
 	while (true) {//id roof
@@ -98,14 +98,15 @@ int Manager::signUp()
 int Manager::logIn()
 {
 	cout << "로그인이다\n" << endl;
-	regex idChecker1("^[a-zA-Z0-9].*$");//영어먼저시작하는경우
+	regex idChecker1("[\\w\\S]+");//영어먼저시작하는경우
 	//regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하겹치다는경우
 
 	while (true) {//로그인 성공하면 current_user에 로그인한 유저 정보 저장됨
 		cout << "id : ";
 		string test_id, test_pw;
 		getline(cin, test_id);
-		if (isSpace(test_id)) continue;
+		
+		if (false);//if (isSpace(test_id)) continue;
 		else {
 			if (!isQuit(test_id)) {
 				if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
@@ -128,7 +129,7 @@ int Manager::logIn()
 								if (regex_match(test_pw, pwChecker)) {//pw형식 옳바름
 									if (!strcmp(user[count].pw.c_str(), test_pw.c_str())) {
 										//로그인성공
-										current_user = User(user[count].id, user[count].pw);
+										current_user = new User(user[count].id, user[count].pw);
 										//로그인 성공한 계정 접속
 										cout << "로그인 성공!\n id: " << user[count].id << endl;
 										return 1;
@@ -142,9 +143,10 @@ int Manager::logIn()
 									cout << "옳바르지 않은 pw형식\n" << endl;
 								}
 							}
-
-
 						}
+					}
+					else {
+						cout << "id 형식 오류\n" << endl;
 					}
 				}
 				else {
@@ -169,7 +171,6 @@ void Manager::loginMenu()
 		regex menuChecker("^(1|2){1}$");
 
 		getline(cin, test_menu);
-
 		if (regex_match(test_menu, menuChecker)) {//입력값이 1 또는 2이면 진행
 			const char* buf = test_menu.c_str();//char* buf
 			int menu = atoi(buf);//char* to int
@@ -212,6 +213,7 @@ int Manager::mainMenu()
 					registerRestaurant();
 					break;
 				case 2:
+					ManageRestaurant();
 					break;
 				case 3:
 					break;
@@ -226,14 +228,43 @@ int Manager::mainMenu()
 		}
 	}
 }
+void Manager::ManageRestaurant()
+{
+
+	while (true) {
+		int select;
+		cout << "<<식당 리스트>>" << endl;
+		current_user->printMyRest();
+		cout << "보기선택 : ";
+		cin >> select;
+		cin.ignore();//버퍼 제거 
+		if (select <= current_user->restaurant.size() + 1 && select >= 1) {
+			if (select == current_user->restaurant.size() + 1) return;
+			if (current_user->restaurant.at(select - 1).register_Status())
+				current_user->restaurant.at(select - 1).change_info();
+			else
+				current_user->restaurant.at(select - 1).more_info();
+		}
+		else {
+			cout << "다시 입력해 주세요\n\n" << endl;
+		}
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(INT_MAX, '\n');
+			cout << "다시 입력해주세요" << endl;
+
+		}
+	}
+}
 
 void Manager::registerRestaurant()
 {
 	string data, category, R_name, R_address;
-	char* data_buff = new char[15];
+	
 	while (true) {
 		cout << "카테고리/식당이름/식당주소" << endl << "입력하세요<<";
 		getline(cin, data);
+		char* data_buff = new char[data.size()+1];
 		strcpy(data_buff, data.c_str());
 		trim(data);//앞뒤공백은 자르기
 		if (!isQuit(data)) {
@@ -297,7 +328,8 @@ void Manager::registerRestaurant()
 			cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
 			if (yesorno()) {
 				//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
-				current_user.restaurant.push_back(Restaurant(category, R_name, R_address));
+				current_user->restaurant.push_back(Restaurant(category, R_name, R_address));
+				//이거 저장해야 하는데 y/n단계에서 자꾸 이상해..
 				cout << "등록완료" << endl;
 				return;
 			}
@@ -351,17 +383,19 @@ bool Manager::isSpace(string str)
 {
 	for (int i = 0; i < str.length(); i++) {
 		const char* check = str.c_str();
-		if (isspace(check[i])) {
-			cout << "공백없이 입력해주세요" << endl;
-			return true;
-		}
+			if (isspace(check[i])) {
+				cout << "공백없이 입력해주세요" << endl;
+				return true;
+			}
 	}
 	return false;
 }
 
 
+
 Manager::Manager()
 {
+	this->current_user = NULL;
 }
 
 Manager::~Manager()

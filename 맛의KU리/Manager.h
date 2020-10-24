@@ -5,15 +5,16 @@ class Manager
 {
 public:
 	vector<User> user;
-	User current_user;
+	User* current_user;
 	int signUp();
 	int logIn();
 	void loginMenu();
 	int mainMenu();
 	void registerRestaurant();
+	void ManageRestaurant();
 	void searchRestaurant();
 	void readInfoTextFile();
-	bool isQuit(string str);
+	static bool isQuit(string str);//static Ãß°¡
 	bool isSpace(string str);
 	Manager();
 	~Manager();

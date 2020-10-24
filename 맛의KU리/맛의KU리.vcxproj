@@ -153,6 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="info.txt" />
+    <Text Include="Restaurant.txt" />
+    <Text Include="Restaurant_Info.txt" />
+    <Text Include="Restaurant_Menu.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
