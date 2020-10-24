@@ -1,8 +1,9 @@
+
 #include "Manager.h"
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:4996)
 
-static void trim(string& s);
+static void trim(string & s);
 bool yesorno() {
 	string c;
 	cout << "yes or no?: ";
@@ -137,11 +138,11 @@ int Manager::logIn()
 					}
 				}
 				else {
-				cout << "id 길이 조건 오류\n" << endl;
+					cout << "id 길이 조건 오류\n" << endl;
 				}
 			}
 			else {
-			break;
+				break;
 			}
 		}
 	}
@@ -225,56 +226,56 @@ void Manager::registerRestaurant()
 		getline(cin, data);
 		strcpy(data_buff, data.c_str());
 		trim(data);//앞뒤공백은 자르기
-			if (!isQuit(data)) {
-				category = string(strtok(data_buff, "/"));
-				R_name = string(strtok(NULL, "/"));
-				R_address = string(strtok(NULL, "/"));
-				trim(category);
-				trim(R_name);
-				trim(R_address);
+		if (!isQuit(data)) {
+			category = string(strtok(data_buff, "/"));
+			R_name = string(strtok(NULL, "/"));
+			R_address = string(strtok(NULL, "/"));
+			trim(category);
+			trim(R_name);
+			trim(R_address);
 
-				if (!(strcmp(category.c_str(), "japanese")==0 || strcmp(category.c_str(), "chinese")==0 || strcmp(category.c_str(), "korean")==0 || strcmp(category.c_str(), "western")==0))
-				{//카테고리 검사
-					cout << "카테고리 규칙위반 " << endl;
-					continue;
-				}
+			if (!(strcmp(category.c_str(), "japanese") == 0 || strcmp(category.c_str(), "chinese") == 0 || strcmp(category.c_str(), "korean") == 0 || strcmp(category.c_str(), "western") == 0))
+			{//카테고리 검사
+				cout << "카테고리 규칙위반 " << endl;
+				continue;
+			}
 
-				if(true)//공백이 있다면 연속된 공백을 하나의 공백으로 바꿔야함
-				{//이름 검사
-					
-				}
-
-				bool check = false;
-				for (int i = 0; i < 10; i++) {//주소검사
-					if (strcmp(R_address.c_str(), V_address[i].c_str())==0) {
-						check = true;
-						break;
-					}
-					else {
-						check = false;
-					}
-				}
-				if (!(check)) {
-					cout << "주소 규칙위반" << endl;
-					continue;
-				}
-				//모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
-				cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl ;
-				if (yesorno()) {
-					//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
-					current_user.restaurant.push_back(Restaurant(category, R_name, R_address));
-
-					cout << "등록완료" << endl;
-					return;
-				}
-				else {
-					continue;
-				}
-				
-
+			if (true)//공백이 있다면 연속된 공백을 하나의 공백으로 바꿔야함
+			{//이름 검사
 
 			}
-			else return;
+
+			bool check = false;
+			for (int i = 0; i < 10; i++) {//주소검사
+				if (strcmp(R_address.c_str(), V_address[i].c_str()) == 0) {
+					check = true;
+					break;
+				}
+				else {
+					check = false;
+				}
+			}
+			if (!(check)) {
+				cout << "주소 규칙위반" << endl;
+				continue;
+			}
+			//모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
+			cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
+			if (yesorno()) {
+				//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
+				current_user.restaurant.push_back(Restaurant(category, R_name, R_address));
+
+				cout << "등록완료" << endl;
+				return;
+			}
+			else {
+				continue;
+			}
+
+
+
+		}
+		else return;
 	}
 
 }
@@ -294,19 +295,19 @@ void Manager::readInfoTextFile()
 	ifstream readFile;
 	readFile.open("info.txt");
 	if (readFile.is_open()) {
-		
+
 		while (!readFile.eof()) {
 			readFile.getline(readline, 16);
 			if (!readFile.eof()) {//eof일때 strtok안해줄라고
 				cout << readline << endl;
-				
+
 				temp_info[0] = strtok(readline, "/");//id
 				temp_info[1] = strtok(NULL, "/");//pw
 
 				user.push_back(User(temp_info[0], temp_info[1]));
 			}
 		}
-		
+
 	}
 	else {
 		cout << "파일이 오픈되지 않음\n" << endl;
