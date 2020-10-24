@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "User.h"
 
 class Manager
@@ -15,6 +15,7 @@ public:
    void registerRestaurant();
    void searchRestaurant();
    void readInfoTextFile();
+   
    bool isin0to128(string str);
    bool isQuit(string str);
    bool isSpace(string str);
