@@ -49,5 +49,11 @@
     <Text Include="info.txt">
       <Filter>소스 파일</Filter>
     </Text>
+<<<<<<< HEAD
+=======
+    <Text Include="Restaurant.txt">
+      <Filter>소스 파일</Filter>
+    </Text>
+>>>>>>> first
   </ItemGroup>
 </Project>
