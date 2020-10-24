@@ -239,9 +239,9 @@ void Manager::registerRestaurant()
 					continue;
 				}
 
-				if(isSpace(R_name))//공백이 있다면 연속된 공백을 하나의 공백으로 바꿔야함
+				if(true)//공백이 있다면 연속된 공백을 하나의 공백으로 바꿔야함
 				{//이름 검사
-					//모순 공백열이 trim에 의해 잘리면서 가운데 공백열이 존재할수 없게됨 
+					
 				}
 
 				bool check = false;
