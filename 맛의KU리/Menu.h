@@ -14,10 +14,10 @@ static void trim(string& s);
 class Menu
 {
 public:
-	int m_price;
+	string m_price;
 	string m_name;
 	static void inputTest();
-	Menu(int price, string name);
+	Menu(string price, string name);
 	~Menu();
 };
 

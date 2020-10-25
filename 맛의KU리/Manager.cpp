@@ -107,7 +107,7 @@ int Manager::logIn()
                   readRestTextFile();
                   int count = 0;
                   for (count = 0; count < user.size(); count++) {//text file 중복검사
-                     cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
+                     cout << "아이디저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
                      if (!strcmp(user[count].id.c_str(), test_id.c_str())) break;
                   }
                   if (count == user.size()) {//중복된 아이디 없으면 다시입력받기
@@ -125,21 +125,15 @@ int Manager::logIn()
                         if (regex_match(test_pw, pwChecker)) {//pw형식 옳바름
                            if (!strcmp(user[count].pw.c_str(), test_pw.c_str())) {
                               //로그인성공
-                              
                               current_user = new User(user[count].id, user[count].pw);
-                              if (user[count].restaurant.size() > 0) {
-                                  for (int i = 0; i < user[count].restaurant.size();i++) {
-                                      current_user->restaurant.push_back(Restaurant(user[count].restaurant[i].category,
-                                          user[count].restaurant[i].name,
-                                          user[count].restaurant[i].address));
-                                      cout << "현재유져 : " << current_user->restaurant[i].category
-                                          << current_user->restaurant[i].name
-                                          << current_user->restaurant[i].address << endl;
-                                  }
-                              }
-                              else {
-                                  cout << "아직 등록한 식당이 없어요\n\n\n" << endl;
-                              }
+                                for (int i = 0; i < user[count].restaurant.size();i++) {
+                                    current_user->restaurant.push_back(Restaurant(user[count].restaurant[i].category,
+                                        user[count].restaurant[i].name,
+                                        user[count].restaurant[i].address));
+                                    cout << "현재유져 : " << current_user->restaurant[i].category
+                                        << current_user->restaurant[i].name
+                                        << current_user->restaurant[i].address << endl;
+                                }
                               
                               //로그인 성공한 계정 접속
                               cout << "로그인 성공!\n id: " << user[count].id << endl;
@@ -283,150 +277,157 @@ void Manager::registerRestaurant()
           cout << "한국어 입력 금지" << endl;
           continue;
       }
-      cout << "data : " << data << endl;
-      cout << "datasize : " << data.size() << endl;
-      data_buff = new char[data.size() + 1];
-      strcpy(data_buff, data.c_str());
-      for (int i = 0; i < data.size(); i++) {
-         if ((int)data[i] == 47)
-            scount++;
-      }
-      cout << "scount : "<<scount << endl;
-
-      if (scount != 2) continue;//슬래시 2개 아니면 다시입력받기
-      
       trim(data);//앞뒤공백은 자르기
       if (!isQuit(data)) {
-         vector<char*>stv;
-         char* ptr1 = strtok(data_buff, "/");
-         while (ptr1 != nullptr) {
-            stv.push_back(ptr1);
-            ptr1 = strtok(NULL, "/");
-         }
-         if (stv.size() == 3) {
-            category = (string)stv[0];
-            R_name = (string)stv[1];
-            R_address = (string)stv[2];
-         }
-         else {
-            continue;
-         }
-         
-         cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
-         trim(category);
-         trim(R_name);
-         trim(R_address);
-         cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
+          cout << "data : " << data << endl;
+          cout << "datasize : " << data.size() << endl;
+          data_buff = new char[data.size() + 1];
+          strcpy(data_buff, data.c_str());
+          for (int i = 0; i < data.size(); i++) {
+             if ((int)data[i] == 47)
+                scount++;
+          }
+          cout << "scount : "<<scount << endl;
 
-         regex categoryChecker("^[a-z].*$");
-         if (!regex_match(category, categoryChecker)) {
-            cout << "카테고리 영문자만 입력하세요" << endl;
-            continue;
-         }
-         else {
-            if (!((strcmp(category.c_str(), "japanese") == 0) || (strcmp(category.c_str(), "chinese") == 0) || (strcmp(category.c_str(), "korean") == 0) || (strcmp(category.c_str(), "western") == 0)))
-            {//카테고리 검사
-               cout << "2??" << endl;
-               cout << "카테고리 4중에 한개만 입력해주세요ㅅㅂ" << endl;
-               continue;
-            }
-         }
-         
-         //이름검사
-         regex nameChecker("[a-zA-Z[:space:]]+");
-         if (!regex_match(R_name, nameChecker)) {
-            cout << "식당 이름 영문자 또는 영문자와 공백 조합으로 입력하세요" << endl;
-            continue;
-         }
-         else {
-            for (int i = 0; i < R_name.size(); i++) {
-               R_name[i] = tolower(R_name[i]);
-            }
-            cout << "R_name : " << R_name << endl;
-            vector<char*>v;
-            char* buf = new char[R_name.size() + 1];
-            strcpy(buf, R_name.c_str());
-            char* ptr = strtok(buf, " \t");//공백+탭 조합도 판별하기위함
-            while (ptr != nullptr) {
-               cout << "3??" << endl;
-               v.push_back(ptr);
-               ptr = strtok(NULL, " \t");
-            }
-            string result = "";
-            if (v.size() == 1) {
-               result = (string)v[0];
-            }
-            else {
-               for (int i = 0; i < v.size(); i++) {
-                  if (i != v.size() - 1) {
-                     result += (string)v[i] + " ";
-                  }
-                  else {
-                     result += (string)v[i];
-                  }
-               }
-            }
-            R_name = result;
-            if (R_name.size() < 1 || R_name.size() > 15) {
-                cout << "길이 1~15" << endl;
-                continue;
-            }
-            //텍스트파일에 식당이름 있나 없나 검사하기
-            for (int i = 0; i < user.size(); i++) {
-                for (int j = 0; j < user[i].restaurant.size(); j++) {
-                    if (!strcmp(user[i].restaurant[j].name.c_str(), R_name.c_str())) {
-                        cout << "중복된 식당 이름이 있습니다\n" << endl;
-                        break;
-                    }
-                }
-            }
-         }
-         regex adrChecker("[a-zA-Z0-9]+");//알파벳+숫자만입력
-         if (!regex_match(R_address, adrChecker)) {
-            cout << "영문자만 입력하세요" << endl;
-            continue;
-         }
-         else {
-            bool check = false;
-            for (int i = 0; i < 10; i++) {//주소검사
-               if (strcmp(R_address.c_str(), V_address[i].c_str()) == 0) {
-                  check = true;
-                  break;
-               }
-               else {
-                  check = false;
-               }
-            }
-            if (!(check)) {
-               cout << "주소 규칙위반" << endl;
-               continue;
-            }
-         }
-         
-         //모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
-         cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
-         if (yesorno()) {//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
-             ofstream writeRestaurant;
-
-             writeRestaurant.open("Restaurant.txt", std::ofstream::out | std::ofstream::app);//쓰기모드, 이어서 추가하기
-             if (writeRestaurant.is_open()) {
-                 string merge = current_user->id + "/" + category + "/" + R_name + "/" + R_address + "\n";
-                 writeRestaurant.write(merge.c_str(), merge.size());
+          if (scount != 2) continue;//슬래시 2개 아니면 다시입력받기
+      
+          trim(data);//앞뒤공백은 자르기
+      
+             vector<char*>stv;
+             char* ptr1 = strtok(data_buff, "/");
+             while (ptr1 != nullptr) {
+                stv.push_back(ptr1);
+                ptr1 = strtok(NULL, "/");
+             }
+             if (stv.size() == 3) {
+                category = (string)stv[0];
+                R_name = (string)stv[1];
+                R_address = (string)stv[2];
              }
              else {
-                 cout << "파일 오픈 오류\n" << endl;
+                continue;
              }
-             writeRestaurant.close();
-             readRestTextFile();
+         
+             cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
+             trim(category);
+             trim(R_name);
+             trim(R_address);
+             cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
 
-            current_user->restaurant.push_back(Restaurant(category, R_name, R_address));
-            for (int i = 0; i < current_user->restaurant.size(); i++) {
-               cout << "카테고리 : " << current_user->restaurant[i].category << "/이름 : " << current_user->restaurant[i].name << "/주소 : " << current_user->restaurant[i].address << endl;
-            }
+             regex categoryChecker("^[a-z].*$");
+             if (!regex_match(category, categoryChecker)) {
+                cout << "카테고리 영문자만 입력하세요" << endl;
+                continue;
+             }
+             else {
+                if (!((strcmp(category.c_str(), "japanese") == 0) || (strcmp(category.c_str(), "chinese") == 0) || (strcmp(category.c_str(), "korean") == 0) || (strcmp(category.c_str(), "western") == 0)))
+                {//카테고리 검사
+                   cout << "2??" << endl;
+                   cout << "카테고리 4중에 한개만 입력해주세요ㅅㅂ" << endl;
+                   continue;
+                }
+             }
+         
+             //이름검사
+             regex nameChecker("[a-zA-Z[:space:]]+");
+             if (!regex_match(R_name, nameChecker)) {
+                cout << "식당 이름 영문자 또는 영문자와 공백 조합으로 입력하세요" << endl;
+                continue;
+             }
+             else {
+                for (int i = 0; i < R_name.size(); i++) {
+                   R_name[i] = tolower(R_name[i]);
+                }
+                cout << "R_name : " << R_name << endl;
+                vector<char*>v;
+                char* buf = new char[R_name.size() + 1];
+                strcpy(buf, R_name.c_str());
+                char* ptr = strtok(buf, " \t");//공백+탭 조합도 판별하기위함
+                while (ptr != nullptr) {
+                   cout << "3??" << endl;
+                   v.push_back(ptr);
+                   ptr = strtok(NULL, " \t");
+                }
+                string result = "";
+                if (v.size() == 1) {
+                   result = (string)v[0];
+                }
+                else {
+                   for (int i = 0; i < v.size(); i++) {
+                      if (i != v.size() - 1) {
+                         result += (string)v[i] + " ";
+                      }
+                      else {
+                         result += (string)v[i];
+                      }
+                   }
+                }
+                R_name = result;
+                if (R_name.size() < 1 || R_name.size() > 15) {
+                    cout << "길이 1~15" << endl;
+                    continue;
+                }
+                //텍스트파일에 식당이름 있나 없나 검사하기
+                bool check = false;
+                for (int i = 0; i < user.size(); i++) {
+                    for (int j = 0; j < user[i].restaurant.size(); j++) {
+                        if (!strcmp(user[i].restaurant[j].name.c_str(), R_name.c_str())) {
+                            cout << "중복된 식당 이름이 있습니다\n" << endl;
+                            check = true;
+                            break;
+                        }
+                    }
+                }
+                if (check) continue;
+             }
+             regex adrChecker("[a-zA-Z0-9]+");//알파벳+숫자만입력
+             if (!regex_match(R_address, adrChecker)) {
+                cout << "영문자만 입력하세요" << endl;
+                continue;
+             }
+             else {
+                bool check = false;
+                for (int i = 0; i < 10; i++) {//주소검사
+                   if (strcmp(R_address.c_str(), V_address[i].c_str()) == 0) {
+                      check = true;
+                      break;
+                   }
+                   else {
+                      check = false;
+                   }
+                }
+                if (!(check)) {
+                   cout << "주소 규칙위반" << endl;
+                   continue;
+                }
+             }
+         
+             //모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
+             cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
+             if (yesorno()) {//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
+                 ofstream writeRestaurant;
 
-            cout << "등록완료" << endl;
-            return;
-         }
+                 writeRestaurant.open("Restaurant.txt", std::ofstream::out | std::ofstream::app);//쓰기모드, 이어서 추가하기
+                 if (writeRestaurant.is_open()) {
+                     string merge = current_user->id + "/" + category + "/" + R_name + "/" + R_address + "\n";
+                     writeRestaurant.write(merge.c_str(), merge.size());
+                 }
+                 else {
+                     cout << "파일 오픈 오류\n" << endl;
+                 }
+                 writeRestaurant.close();
+                 readRestTextFile();
+
+                current_user->restaurant.push_back(Restaurant(category, R_name, R_address));
+                current_user->print();
+
+                cout << "등록완료" << endl;
+                return;
+             }
+             else {
+                 cout << "추가안해\n" << endl;
+                 continue;
+             }
       }
       else return;
    }
@@ -435,6 +436,11 @@ void Manager::registerRestaurant()
 
 void Manager::searchRestaurant()
 {
+    cout << "현재 내 지역/시간/요일 :" << endl;
+    string data="";
+    getline(cin, data);
+
+
 }
 
 void Manager::readInfoTextFile()
@@ -460,7 +466,9 @@ void Manager::readInfoTextFile()
             user.push_back(User(temp_info[0], temp_info[1]));
          }
       }
-      
+      for (int i = 0; i < user.size(); i++) {
+          cout << "readinfo에서 user에 저장된값" << user[i].id << "/" << user[i].pw << endl;
+      }
    }
    else {
       cout << "파일이 오픈되지 않음\n" << endl;
@@ -472,6 +480,8 @@ void Manager::readInfoTextFile()
 
 void Manager::readRestTextFile()
 {
+    for (int i = 0; i < user.size(); i++) user[i].restaurant.clear();
+
     ifstream readRestaurant;
     char** temp_info_R = new char* [4];
     for (int i = 0; i < 4; i++) {
@@ -484,18 +494,21 @@ void Manager::readRestTextFile()
         while (!readRestaurant.eof()) {
             readRestaurant.getline(readlineR, 50);
             if (!readRestaurant.eof()) {//eof일때 strtok안해줄라고
-                cout << readlineR << endl;
+                //cout << "textfile : "<<readlineR << endl;
 
                 temp_info_R[0] = strtok(readlineR, "/");//id
                 temp_info_R[1] = strtok(NULL, "/");//category
                 temp_info_R[2] = strtok(NULL, "/");//식당이름
                 temp_info_R[3] = strtok(NULL, "/");//식당주소
-
+                
                 for (int i = 0; i < user.size(); i++) {//회원가입은 했지만 식당 안등록한새끼들은 user객체에 식당없음
+                   
                     if (!strcmp(user[i].id.c_str(), temp_info_R[0])) {
                         user[i].restaurant.push_back(Restaurant(temp_info_R[1], temp_info_R[2], temp_info_R[3]));
-                        break;
+                  
                     }
+                    //cout << "i : " << i << endl;
+                   // user[i].print();
                 }
             }
         }
@@ -518,10 +531,139 @@ void Manager::ManageRestaurant()
         cin.ignore();//버퍼 제거 
         if (select <= current_user->restaurant.size() + 1 && select >= 1) {
             if (select == current_user->restaurant.size() + 1) return;
-            if (current_user->restaurant.at(select - 1).register_Status())
-                current_user->restaurant.at(select - 1).change_info();
-            else
-                current_user->restaurant.at(select - 1).more_info();
+            if (current_user->restaurant.at(select - 1).register_Status()) {
+                cout << "부가정보 수정" << endl;
+                cout << "1. 메뉴/가격 등록 \n2. 시간/휴무일 등록 \n3. 이전메뉴" << endl;
+                while (true) {
+                    cout << "보기 선택: ";
+                    int select;
+                    cin >> select;
+                    cin.ignore();//버퍼 제거 
+                    if (select <= 3 && select >= 1) {
+                        if (select == 3) return;
+                        else if (select == 1) cout << "setMenu()";
+                        else if (select == 2) cout << "setMore_info()";
+                    }
+                    else
+                        cout << "다시 입력해 주세요" << endl;
+
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                        cout << "다시 입력해주세요" << endl;
+                    }
+                }
+            }
+            else {
+                while (true) {
+                    cout << "부가정보 등록" << endl;
+                    cout << "1. 메뉴/가격 등록 \n2. 시간/휴무일 등록 \n3. 이전메뉴" << endl;
+                    cout << "보기 선택: ";
+                    int select;
+                    cin >> select;
+                    cin.ignore();//버퍼 제거 
+                    if (select <= 3 && select >= 1) {
+                        if (select == 3) return;
+                        else if (select == 1)
+                        {
+                            string M_name, M_price, temp;
+                            string input;
+                            regex M_name_Checker("[a-zA-Z\\s]*");
+                            regex M_price_Checker("^[1-9]?(,|[0-9])*");
+                            while (true) {
+                                cout << "메뉴/가격정보: ";
+                                getline(cin, input);
+                                char* data_buff = new char[input.size() + 1];
+                                strcpy(data_buff, input.c_str());
+                                //trim(input);//앞뒤공백은 자르기
+                                if (!isQuit(input))
+                                {
+                                    M_name = string(strtok(data_buff, "/"));
+                                    M_price = string(strtok(NULL, "/"));
+                                    char* price = new char[M_price.size()];
+                                    int count = 0;
+                                    const char* m = M_price.c_str();
+                                    trim(M_name);
+                                    trim(M_price);
+                                    if (regex_match(M_name, M_name_Checker))
+                                    {
+                                        for (int i = 0; i < M_name.size(); i++) {
+                                            M_name[i] = tolower(M_name[i]);
+                                        }
+                                        if (!regex_match(M_price, M_price_Checker)) {
+                                            cout << "가격 형식 확인" << endl;
+                                            continue;
+                                        }
+
+                                        if (M_price.find(",") != -1) {
+                                            while (M_price.find(",") != -1)
+                                                M_price.replace(M_price.find(","), 1, "");
+                                        }
+
+                                        cout << "메뉴이름: " << M_name << endl;
+                                        cout << "메뉴가격: " << M_price << endl;
+                                        if (yesorno()) {
+                                            current_user->restaurant.at(select - 1).menu.push_back(Menu(M_price, M_name));
+                                            //menu.push_back(Menu(price, M_name));
+                                            cout << "등록완료!" << endl;
+                                            break;
+                                        }
+                                        else {
+                                            continue;
+                                        }
+
+                                    }
+                                    else if (regex_match(M_price, M_name_Checker))
+                                    {
+                                        temp = M_price;
+                                        M_price = M_name;
+                                        M_name = temp;
+                                        for (int i = 0; i < M_name.size(); i++) {
+                                            M_name[i] = tolower(M_name[i]);
+                                        }
+                                        if (!regex_match(M_price, M_price_Checker)) {
+                                            cout << "가격 형식 확인" << endl;
+                                            continue;
+                                        }
+                                        if (M_price.find(",") != -1) {
+                                            while (M_price.find(",") != -1)
+                                                M_price.replace(M_price.find(","), 1, "");
+                                        }
+                                        cout << "메뉴이름: " << M_name << endl;
+                                        cout << "메뉴가격: " << M_price << endl;
+                                        if (yesorno()) {
+                                            current_user->restaurant.at(select - 1).menu.push_back(Menu(M_price, M_name));
+                                            cout << "등록완료!" << endl;
+                                            break;
+                                        }
+                                        else {
+                                            continue;
+                                        }
+                                    }
+                                    else {//둘다 정규식 안맞음->재입력
+                                        cout << "메뉴/가격 형식 확인바람" << endl;
+                                        continue;
+                                    }
+                                }
+                                else
+                                {
+                                    return;
+                                }
+                            }
+                            break;
+                        }
+                        else if (select == 2) cout << "addMore_info()" << endl;
+                    }
+                    else
+                        cout << "다시 입력해 주세요" << endl;
+
+                    if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                        cout << "다시 입력해주세요" << endl;
+                    }
+                }
+            }
         }
         else {
             cout << "다시 입력해 주세요\n\n" << endl;

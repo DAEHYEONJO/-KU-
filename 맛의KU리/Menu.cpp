@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-Menu::Menu(int price, string name)
+Menu::Menu(string price, string name)
 	:m_price(price),m_name(name)
 {
 	

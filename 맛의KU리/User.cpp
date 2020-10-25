@@ -10,7 +10,6 @@ User::User(string id, string pw)
 }
 void User::printMyRest()
 {
-	readRestTxtFIle();
 	int i;
 	if (restaurant.size() == 0) {
 		cout << "등록된 식당이 없습니다" << endl;
@@ -24,6 +23,12 @@ void User::printMyRest()
 			cout << "(register more info)" << endl;
 	}
 	cout << i + 1 << ". 메인메뉴 돌아가기" << endl;	
+}
+
+void User::print()
+{
+	for (int i = 0; i < restaurant.size(); i++)
+		cout <<"안녕 나는" <<id<<" 야 카테고리 : " << restaurant[i].category << "이름 : " << restaurant[i].name << "주소 : " << restaurant[i].address << endl;
 }
 
 void User::readRestTxtFIle()

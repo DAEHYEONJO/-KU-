@@ -19,6 +19,7 @@ public:
 	User(string id, string pw);
 	~User();
 	void printMyRest();
+	void print();
 	void readRestTxtFIle();
 };
 
