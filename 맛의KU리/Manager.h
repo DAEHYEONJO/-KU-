@@ -11,6 +11,9 @@ public:
    int signUp();
    int logIn();
    void loginMenu();
+   bool isMoney(string str);
+   void writeR_MenuTextFile();
+   void writeR_InfoTextFile();
    bool yesorno();
    bool isDay(string str);
    bool isTime(string str, vector<string>& v);

@@ -10,8 +10,9 @@ void Restaurant::print_menu()
 	if (menu.empty())
 		cout << name << "식당의 메뉴 등록 안되어있음" << endl;
 	else {
+		cout <<"카테고리 : " <<category<<" 식당이름 : " << name << endl;
 		for (int i = 0; i < menu.size(); i++)
-			cout << "식당이름 : " << name << "메뉴이름 : " << menu[i].m_name << "메뉴가격  :" << menu[i].m_price << endl;
+			cout<< "메뉴이름 : " << menu[i].m_name << " 메뉴가격  :" << menu[i].m_price <<"won"<<endl;
 	}
 		
 }
