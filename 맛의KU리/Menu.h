@@ -17,7 +17,7 @@ public:
 	string m_price;
 	string m_name;
 	static void inputTest();
-	Menu(string price, string name);
+	Menu(string name, string price);
 	~Menu();
 };
 

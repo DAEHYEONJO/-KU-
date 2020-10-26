@@ -10,10 +10,17 @@ public:
 	string address;
 	string category;
 	vector<Menu> menu;
-	string open_hour;
-	string close_day;
+	vector<string> open_hour;
+	vector<string> close_day;
+	
 	Restaurant();
 	Restaurant(string category, string name, string address);
+	void print_menu();
+	void print_open_hour();
+	void print_info();
+	void print_info2();
+	void print_close_day();
+	bool set_open_hour(string time);
 	bool register_Status();
 	void change_info();
 	void more_info();

@@ -3,6 +3,69 @@
 Restaurant::Restaurant(string category, string name, string address)
 	:category(category),name(name),address(address)
 {
+	
+}
+void Restaurant::print_menu()
+{
+	if (menu.empty())
+		cout << name << "식당의 메뉴 등록 안되어있음" << endl;
+	else {
+		for (int i = 0; i < menu.size(); i++)
+			cout << "식당이름 : " << name << "메뉴이름 : " << menu[i].m_name << "메뉴가격  :" << menu[i].m_price << endl;
+	}
+		
+}
+void Restaurant::print_open_hour()
+{
+	
+	if (open_hour.size() == 0) {
+		cout << name << "식당의 영업시간 등록 안되어있음" << endl;
+	}
+	else {
+		for (int i = 0; i < open_hour.size(); i++) {
+			cout << open_hour[i] << " | ";
+		}
+		cout << endl;
+	}
+}
+void Restaurant::print_info()
+{
+	cout << "카테고리 : " << category << " 식당이름 : " << name << " 식당주소 : " << address << endl;
+	
+}
+void Restaurant::print_info2()
+{
+	cout << this->name << " 의 부가정보" << endl;
+
+	cout << "주소: " << this->address << endl;
+	if (this->close_day.at(0) == "\0")
+		cout << "휴무일 없음" << endl;
+	else
+		cout << "휴무일 : " << this->close_day.at(0) << " index: " << this->close_day.at(1) << endl;
+
+	cout << "영업시간 : " << this->open_hour.at(0) << ":" << this->open_hour.at(1) << " ~ " << this->open_hour.at(open_hour.size() - 3) << ":" << this->open_hour.at(open_hour.size() - 2) << endl;
+}
+void Restaurant::print_close_day()
+{
+	
+	if (close_day.size() == 0) {
+		cout << "식당이름 : " << name << "휴무일 등록 안되어있음" << endl;
+	}
+	else {
+		for (int i = 0; i < close_day.size(); i++) {
+			cout<<close_day[i] << " | ";
+		}
+		cout << endl;
+	}
+}
+bool Restaurant::set_open_hour(string time)
+{
+	/*if (형식맞음) {
+		대입 후
+			return true;
+	}
+	return false;*/
+	return false;
 }
 Restaurant::Restaurant()
 {
@@ -114,4 +177,5 @@ bool Restaurant::register_Status()
 }
 Restaurant::~Restaurant()
 {
+
 }

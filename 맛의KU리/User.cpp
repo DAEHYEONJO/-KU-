@@ -17,18 +17,38 @@ void User::printMyRest()
 	}
 	for (i = 0; i < restaurant.size(); i++) {
 		cout << i + 1 << ". " << restaurant.at(i).name;
-		if (restaurant.at(i).register_Status())//등록이 완료되어있다면 true 반환
-			cout << "(full info)" << endl;
-		else
-			cout << "(register more info)" << endl;
+		if (!(restaurant[i].open_hour.empty())) {
+			//등록이 완료되어있다면 true 반환
+			if (!restaurant[i].menu.empty())
+				cout << "(full info)" << endl;
+			else
+				cout << "(need menu info)" << endl;
+		}
+		else {
+			if (!restaurant[i].menu.empty())
+				cout << "(need time/day info)" << endl;
+			else
+				cout << "(need both info)" << endl;
+		}
 	}
-	cout << i + 1 << ". 메인메뉴 돌아가기" << endl;	
+	cout << i + 1 << ". 메인메뉴 돌아가기" << endl;
 }
 
 void User::print()
 {
-	for (int i = 0; i < restaurant.size(); i++)
-		cout <<"안녕 나는" <<id<<" 야 카테고리 : " << restaurant[i].category << "이름 : " << restaurant[i].name << "주소 : " << restaurant[i].address << endl;
+	if (restaurant.size() == 0) {
+		cout << id << "의 식당 등록되어있지 않음" << endl;
+	}
+	else {
+		cout << "id : " << id << "님의 식당 상세 정보" << endl;
+		for (int i = 0; i < restaurant.size(); i++) {
+			cout <<"==============="<< i + 1 << "번째 식당정보" << "===============" << endl;
+			restaurant[i].print_info();
+			restaurant[i].print_menu();
+			restaurant[i].print_open_hour();
+			restaurant[i].print_close_day();
+		}
+	}
 }
 
 void User::readRestTxtFIle()
