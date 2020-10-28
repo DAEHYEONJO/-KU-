@@ -8,13 +8,13 @@ bool Manager::oneSpaceLength(string& str)
     for (int i = 0; i < str.size(); i++) {
         str[i] = tolower(str[i]);
     }
-    cout << "R_name : " << str << endl;
+    //cout << "R_name : " << str << endl;
     vector<char*>v;
     char* buf = new char[str.size() + 1];
     strcpy(buf, str.c_str());
     char* ptr = strtok(buf, " \t");//공백+탭 조합도 판별하기위함
     while (ptr != nullptr) {
-        cout << "3??" << endl;
+        //cout << "3??" << endl;
         v.push_back(ptr);
         ptr = strtok(NULL, " \t");
     }
@@ -34,7 +34,7 @@ bool Manager::oneSpaceLength(string& str)
     }
     str = result;
     if (str.size() < 1 || str.size() > 15) {
-        cout << "길이 1~15 제한" << endl;
+        cout << "길이 1~15 로 입력하세요\n" << endl;
         return false;
     }
     return true;
@@ -50,6 +50,7 @@ int Manager::signUp()
     //regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하는경우
 
     while (true) {//id roof
+        cout << "\n회원가입 입니다." << endl;
         test_id.clear();
         test_pw.clear();
         cout << "id는 숫자와 영문자 조합이며, 6자리~10자리로 입력하세요\nid : ";
@@ -64,12 +65,15 @@ int Manager::signUp()
             if (!isQuit(test_id)) {//quit 아니면
                 if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
                     if (regex_match(test_id, idChecker1)) {
-                        cout << "조건맞음\n" << endl;
+                        //cout << "조건맞음\n" << endl;
                         readInfoTextFile();//저장되어있는거 읽어오기.
                         int count = 0;
                         for (count = 0; count < user.size(); count++) {//text file 중복검사
-                            cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
-                            if (!strcmp(user[count].id.c_str(), test_id.c_str())) break;
+                            //cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
+                            if (!strcmp(user[count].id.c_str(), test_id.c_str())) {
+                              
+                                break;
+                            }
                         }
                         if (count == user.size()) {
                             cout << "중복되는 id 없음\n" << endl;
@@ -82,7 +86,7 @@ int Manager::signUp()
                                     continue;
                                 }
                                 if (regex_match(test_pw, pwChecker)) {
-                                    cout << "아이디 패스워드 모두 완료\n" << endl;
+                                    cout << "회원가입 완료\n" << endl;
                                     //info.txt에 해당 아이디 패스워드 추가하기.
                                     ofstream writeFile;
                                     writeFile.open("info.txt", std::ofstream::out | std::ofstream::app);//쓰기모드, 이어서 추가하기
@@ -98,20 +102,20 @@ int Manager::signUp()
                                     return 1;
                                 }
                                 else {
-                                    cout << "pw 조건 오류\n" << endl;
+                                    cout << "잘못된 형식입니다.\n" << endl;
                                 }
                             }
                         }
                         else {
-                            cout << "id 중복\n" << endl;
+                            cout << "중복된 정보입니다.\n" << endl;
                         }
                     }
                     else {
-                        cout << "영문자와 숫자를 포함하여 주세요\n" << endl;
+                        cout << "잘못된 형식입니다.\n" << endl;
                     }
                 }
                 else {
-                    cout << "id 길이 조건 오류\n" << endl;
+                    cout << "길이 6~10 으로 입력하세요.\n" << endl;
                 }
             }
             else {
@@ -123,11 +127,11 @@ int Manager::signUp()
 
 int Manager::logIn()
 {
-    cout << "로그인이다\n" << endl;
     regex idChecker1("[a-zA-Z0-9]+");//영어먼저시작하는경우
     //regex idChecker2("^([0-9]+[a-zA-Z]).*$");//숫자먼저시작하겹치다는경우
 
     while (true) {//로그인 성공하면 current_user에 로그인한 유저 정보 저장됨
+        cout << "\n로그인입니다." << endl;
         cout << "id : ";
         string test_id, test_pw;
         getline(cin, test_id);
@@ -146,11 +150,11 @@ int Manager::logIn()
                         readR_MenuTextFile();
                         int count = 0;
                         for (count = 0; count < user.size(); count++) {//text file 중복검사
-                            cout << "아이디저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
+                            //cout << "아이디저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
                             if (!strcmp(user[count].id.c_str(), test_id.c_str())) break;
                         }
                         if (count == user.size()) {//중복된 아이디 없으면 다시입력받기
-                            cout << "중복된 아이디 없음.\n" << endl;
+                            cout << "아이디가 일치하지 않습니다.\n" << endl;
                         }
                         else {
                             while (true) {
@@ -178,12 +182,12 @@ int Manager::logIn()
                                                     user[count].restaurant[i].menu[j].m_price));
                                             }
                                         }
-                                        cout << "현재 로그인 한 유저의 정보 " << endl;
-                                        current_user->print();
+                                        //cout << "현재 로그인 한 유저의 정보 " << endl;
+                                        //current_user->print();
 
 
                                         //로그인 성공한 계정 접속
-                                        cout << "로그인 성공!\n id: " << user[count].id << endl;
+                                        cout << "로그인 성공! id: " << user[count].id << endl;
                                         return 1;
                                     }
                                     else {
@@ -192,7 +196,7 @@ int Manager::logIn()
 
                                 }
                                 else {
-                                    cout << "옳바르지 않은 pw형식\n" << endl;
+                                    cout << "잘못된 형식입니다.\n" << endl;
                                 }
                             }
 
@@ -201,7 +205,7 @@ int Manager::logIn()
                     }
                 }
                 else {
-                    cout << "id 길이 조건 오류\n" << endl;
+                    cout << "길이 6~10으로 입력하세요.\n" << endl;
                 }
             }
             else {
@@ -218,13 +222,13 @@ void Manager::loginMenu()
     string test_menu = "";
     while (c != 4) {
         test_menu.clear();
-        cout << "1. 로그인\t2. 회원가입\n>>보기선택 : ";
+        cout << "\n1. 로그인\t2. 회원가입\n>>보기선택 : ";
 
         regex menuChecker("^(1|2){1}$");
 
         getline(cin, test_menu);
         if (!isin0to128(test_menu)) {
-            cout << "한국어 입력 금지" << endl;
+            cout << "한국어 입력 금지\n" << endl;
             continue;
         }
         if (regex_match(test_menu, menuChecker)) {//입력값이 1 또는 2이면 진행
@@ -241,12 +245,12 @@ void Manager::loginMenu()
             }
                   break;
             default:
-                cout << "이 문장 절대나오면 안됨 나오면 말해줘.\n" << endl;
+                //cout << "이 문장 절대나오면 안됨 나오면 말해줘.\n" << endl;
                 break;
             }
         }
         else {
-            cout << "ERROR : input 1 or 2\n" << endl;
+            cout << "잘못된 형식입니다.\n" << endl;
         }
     }
 }
@@ -291,19 +295,25 @@ bool Manager::yesorno()
     string c = "";
     regex ynCheck("(y)|(n){1}$");
     while (true) {
-        cout << "yes or no?: ";
+        cout << "input y or n : ";
         getline(cin, c);
         if (!isin0to128(c)) {
-            cout << "한국어 입력 금지" << endl;
+            cout << "한국어 입력 금지\n" << endl;
             continue;
         }
         trim(c);
         if (regex_match(c, ynCheck)) {
-            if (!strcmp(c.c_str(), "y")) return 1;
+            if (!strcmp(c.c_str(), "y")) {
+                cout << "저장완료!\n" << endl;
+                return 1;
+            }
+            cout << "정보를 저장하지 않습니다.\n" << endl;
             return 0;
         }
+        cout << "잘못된 형식입니다.\n" << endl;
         //y 또는 n 입력 안했을때 다시 위로가서 입력받기
     }
+    //cout << "정보를 저장하지 않습니다." << endl;
     return false;
 }
 
@@ -320,6 +330,8 @@ bool Manager::isDay(string str)
                 }
             }
             if (i == 7) {
+                cout << "monday ~ sunday 중 입력바랍니다.\n" << endl;
+                return false;
             }
         }
         else {
@@ -365,6 +377,7 @@ bool Manager::isAddress(string str)
                 }
             }
             if (i == 10) {
+                cout << "hwayang1dong~hwayang10dong 중 입력 바랍니다.\n" << endl;
                 return false;
             }
         }
@@ -381,7 +394,7 @@ void Manager::writeRestTextFile()
     ofstream writeFile;
 
     writeFile.open("Restaurant.txt", std::ofstream::out);
-    cout << "write Restaurant txt" << endl;
+    //cout << "write Restaurant txt" << endl;
     string id_wfr;
     string category_wfr;
     string name_wfr;
@@ -398,7 +411,7 @@ void Manager::writeRestTextFile()
             str_wfr = id_wfr + "/" + category_wfr + "/" + name_wfr + "/" + adr_wfr + "\n";
             if (writeFile.is_open()) {
                 writeFile.write(str_wfr.c_str(), str_wfr.size());
-                cout << "파일에 한줄썻음" << str_wfr << endl;
+                //cout << "파일에 한줄썻음" << str_wfr << endl;
                 //cout << user.at(i).restaurant.at(k).menu.size() << endl;
             }
             else {
@@ -416,7 +429,7 @@ void Manager::writeR_MenuTextFile()
     ofstream writeFile;
 
     writeFile.open("Restaurant_Menu.txt", std::ofstream::out);
-    cout << "write R_menu txt" << endl;
+    //cout << "write R_menu txt" << endl;
     string name;
     string menu;
 
@@ -433,8 +446,8 @@ void Manager::writeR_MenuTextFile()
             str = name + menu + "\n";
             if (writeFile.is_open()) {
                 writeFile.write(str.c_str(), str.size());
-                cout << "파일에 한줄썻음" << str << endl;
-                cout << user.at(i).restaurant.at(k).menu.size() << endl;
+                //cout << "파일에 한줄썻음" << str << endl;
+                //cout << user.at(i).restaurant.at(k).menu.size() << endl;
             }
             else {
                 cout << "파일 오픈 오류\n" << endl;
@@ -450,7 +463,7 @@ void Manager::writeR_InfoTextFile()
     ofstream writeFile;
 
     writeFile.open("Restaurant_Info.txt", std::ofstream::out);
-    cout << "write R_Info txt" << endl;
+    //cout << "write R_Info txt" << endl;
     string name_info;
     string adr_info;
     string time_info;
@@ -490,7 +503,7 @@ void Manager::writeR_InfoTextFile()
             str_info = name_info + "/" + adr_info + "/" + time_info + day_info + "\n";
             if (writeFile.is_open()) {
                 writeFile.write(str_info.c_str(), str_info.size());
-                cout << "파일에 한줄썻음" << str_info << endl;
+                //cout << "파일에 한줄썻음" << str_info << endl;
                 // cout << user.at(i).restaurant.at(k).menu.size() << endl;
             }
             else {
@@ -507,12 +520,12 @@ void Manager::writeR_InfoTextFile()
 int Manager::mainMenu()
 {
     while (true) {
-        cout << "1. 식당등록\t2.식당관리\t3. 식당검색\t4. 종료 : ";
+        cout << "\n1. 식당등록\t2.식당관리\t3. 식당검색\t4. 종료 : ";
         regex menuChecker("^([1-4]){1}$");
         string test_menu = "";
         getline(cin, test_menu);
         if (!isin0to128(test_menu)) {
-            cout << "한국어 입력 금지" << endl;
+            cout << "한국어 입력 금지\n" << endl;
             continue;
         }
         if (regex_match(test_menu, menuChecker)) {
@@ -537,7 +550,7 @@ int Manager::mainMenu()
             }
         }
         else {
-            cout << "ERROR : input 1 ~ 4\n" << endl;
+            cout << "잘못된 형식입니다.\n" << endl;
         }
     }
 }
@@ -550,26 +563,33 @@ void Manager::registerRestaurant()
     char* data_buff = nullptr;
     while (true) {
         scount = 0;
+        cout << "\n\n카테고리는 korean, japanese, chinese, western 중 한개 입력하세요" << endl;
+        cout << "식당이름은 영문자 또는 영문자,공백문자 조합이며\n 공백개수 제외 1자리 ~ 15자리 사이로 입력하세요." << endl;
+        cout << "식당이름 입력시 문자들 사이 2개 이상의 공백은 1개로 간주합니다." << endl;
+        cout << "식당주소는 hwayang1dong ~ hwayang10dong 중 한개의 동만 입력하세요." << endl;
         cout << "카테고리/식당이름/식당주소" << endl << "입력하세요<<";
         //   data = "";
         getline(cin, data);
         if (!isin0to128(data)) {
-            cout << "한국어 입력 금지" << endl;
+            cout << "한국어 입력 금지\n" << endl;
             continue;
         }
         trim(data);//앞뒤공백은 자르기
         if (!isQuit(data)) {
-            cout << "data : " << data << endl;
-            cout << "datasize : " << data.size() << endl;
+            //cout << "data : " << data << endl;
+            //cout << "datasize : " << data.size() << endl;
             data_buff = new char[data.size() + 1];
             strcpy(data_buff, data.c_str());
             for (int i = 0; i < data.size(); i++) {
                 if ((int)data[i] == 47)
                     scount++;
             }
-            cout << "scount : " << scount << endl;
+            //cout << "scount : " << scount << endl;
 
-            if (scount != 2) continue;//슬래시 2개 아니면 다시입력받기
+            if (scount != 2) {
+                cout << "잘못된 형식입니다.\n" << endl;
+                continue;//슬래시 2개 아니면 다시입력받기
+            }
 
             trim(data);//앞뒤공백은 자르기
 
@@ -588,22 +608,22 @@ void Manager::registerRestaurant()
                 continue;
             }
 
-            cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
+            //cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
             trim(category);
             trim(R_name);
             trim(R_address);
-            cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
+            //cout << "category/" << category << "/R_name/" << R_name << "/R_address/" << R_address << endl;
 
             regex categoryChecker("^[a-z].*$");
             if (!regex_match(category, categoryChecker)) {
-                cout << "카테고리 영문자만 입력하세요" << endl;
+                cout << "잘못된 형식입니다.\n" << endl;
                 continue;
             }
             else {
                 if (!((strcmp(category.c_str(), "japanese") == 0) || (strcmp(category.c_str(), "chinese") == 0) || (strcmp(category.c_str(), "korean") == 0) || (strcmp(category.c_str(), "western") == 0)))
                 {//카테고리 검사
-                    cout << "2??" << endl;
-                    cout << "카테고리 4중에 한개만 입력해주세요ㅅㅂ" << endl;
+                    //cout << "2??" << endl;
+                    cout << "잘못된 형식입니다.\n" << endl;
                     continue;
                 }
             }
@@ -611,20 +631,20 @@ void Manager::registerRestaurant()
             //이름검사
             regex nameChecker("[a-zA-Z[:space:]]+");
             if (!regex_match(R_name, nameChecker)) {
-                cout << "식당 이름 영문자 또는 영문자와 공백 조합으로 입력하세요" << endl;
+                cout << "잘못된 형식입니다.\n" << endl;
                 continue;
             }
             else {
                 for (int i = 0; i < R_name.size(); i++) {
                     R_name[i] = tolower(R_name[i]);
                 }
-                cout << "R_name : " << R_name << endl;
+                //cout << "R_name : " << R_name << endl;
                 vector<char*>v;
                 char* buf = new char[R_name.size() + 1];
                 strcpy(buf, R_name.c_str());
                 char* ptr = strtok(buf, " \t");//공백+탭 조합도 판별하기위함
                 while (ptr != nullptr) {
-                    cout << "3??" << endl;
+                    //cout << "3??" << endl;
                     v.push_back(ptr);
                     ptr = strtok(NULL, " \t");
                 }
@@ -644,7 +664,7 @@ void Manager::registerRestaurant()
                 }
                 R_name = result;
                 if (R_name.size() < 1 || R_name.size() > 15) {
-                    cout << "길이 1~15" << endl;
+                    cout << "길이 1~15으로 입력하세요\n" << endl;
                     continue;
                 }
                 //텍스트파일에 식당이름 있나 없나 검사하기
@@ -652,7 +672,7 @@ void Manager::registerRestaurant()
                 for (int i = 0; i < user.size(); i++) {
                     for (int j = 0; j < user[i].restaurant.size(); j++) {
                         if (!strcmp(user[i].restaurant[j].name.c_str(), R_name.c_str())) {
-                            cout << "중복된 식당 이름이 있습니다\n" << endl;
+                            cout <<"중복된 정보입니다.\n" << endl;
                             check = true;
                             break;
                         }
@@ -662,7 +682,7 @@ void Manager::registerRestaurant()
             }
             regex adrChecker("[a-zA-Z0-9]+");//알파벳+숫자만입력
             if (!regex_match(R_address, adrChecker)) {
-                cout << "영문자만 입력하세요" << endl;
+                cout << "잘못된 형식입니다.\n" << endl;
                 continue;
             }
             else {
@@ -677,13 +697,13 @@ void Manager::registerRestaurant()
                     }
                 }
                 if (!(check)) {
-                    cout << "주소 규칙위반" << endl;
+                    cout << "잘못된 형식입니다.\n" << endl;
                     continue;
                 }
             }
 
             //모든항목 검사완료시 카테고리: *** 이름: *** 주소: *** 출력 후 y_n 받아야함 
-            cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
+           // cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
             if (yesorno()) {//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
                 ofstream writeRestaurant;
 
@@ -696,16 +716,15 @@ void Manager::registerRestaurant()
                     cout << "파일 오픈 오류\n" << endl;
                 }
                 writeRestaurant.close();
-                readRestTextFile();
-
                 current_user->restaurant.push_back(Restaurant(category, R_name, R_address));
-                current_user->print();
+                readRestTextFile();
+                //current_user->print();
 
-                cout << "등록완료" << endl;
+                //cout << "등록완료" << endl;
                 return;
             }
             else {
-                cout << "추가안해\n" << endl;
+               // cout << "추가안해\n" << endl;
                 continue;
             }
         }
@@ -731,8 +750,12 @@ void Manager::searchRestaurant()
         time.clear();
         day.clear();
         int scount = 0;
-        cout << "순서 무관하게 3개의 데이터를 / 로 구분하여 입력하세요" << endl;
-        cout << "현재 내 지역/시간/요일 :";
+        cout << "\n\n순서 무관하게 3개의 데이터를 / 로 구분하여 입력하세요." << endl;
+        cout << "지역은 hwayang1dong ~ hwayang10dong 중 한개만 입력하세요." << endl;
+        cout << "시간은 : 를 기준으로 시:분을 입력하세요." << endl;
+        cout << "시 : 0~23, 분 : 0~59" << endl;
+        cout << "요일은 monday ~ sunday 중 한개를 입력하세요." << endl;
+        cout << "지역/시간/요일 :";
         getline(cin, data);
         if (isin0to128(data)) {
             trim(data);
@@ -742,7 +765,7 @@ void Manager::searchRestaurant()
                         scount++;
                 }
                 if (scount != 2) {
-                    cout << "슬래시 2개 입력하지 않으면 안됩니다." << endl;
+                    cout << "잘못된 형식입니다.\n" << endl;
                     continue;//슬래시 2개 아니면 다시입력받기
                 }
                 buf = new char[data.size() + 1];
@@ -753,7 +776,7 @@ void Manager::searchRestaurant()
                     ptr = strtok(NULL, "/");
                 }
                 if (temp.size() != 3) {
-                    cout << "데이터 를 각 각 /로 구분하여 3개 입력하세요" << endl;
+                    cout << "잘못된 형식입니다.\n" << endl;
                     continue;
                 }
 
@@ -765,10 +788,10 @@ void Manager::searchRestaurant()
                     if (isAddress(str)) adr = str;
                 }
                 if ((time.empty()) || (day.empty()) || (adr.empty())) {
-                    cout << "정보 다시 입력바람" << endl;
+                    cout << "잘못된 형식입니다.\n" << endl;
                     continue;
                 }
-                cout << "time : " << time << "/day : " << day << "/adr : " << adr << endl;
+               // cout << "time : " << time << "/day : " << day << "/adr : " << adr << endl;
 
                 for (int i = 0; i < user.size(); i++) {
                     for (int j = 0; j < user[i].restaurant.size(); j++) {
@@ -776,27 +799,27 @@ void Manager::searchRestaurant()
                             if (!user[i].restaurant[j].open_hour.empty()) {
                                 //입력한 지역과 식당 주소가 일치하는 식당 발견, 시간 검사 시작
 
-                                cout << " 쥬소 일치 식당 찾음!!!!!!" << endl;
-                                cout << "일치한 식당 : " << user[i].restaurant[j].name << endl;
+                               // cout << " 쥬소 일치 식당 찾음!!!!!!" << endl;
+                                //cout << "일치한 식당 : " << user[i].restaurant[j].name << endl;
                                 if (user[i].restaurant[j].open_hour.size() == 5) {
                                     //식당 마감시간이 자정 안넘은경우 timeV[0]:입력 시간,timeV[1]:입력 분
                                     if (strcmp(getDayIndex(day).c_str(), user[i].restaurant[j].close_day[1].c_str())) {
                                         //입력요일이 저장된 휴무일이랑 다를때만 비교하기
                                         if (stoi(timeV[0]) == stoi(user[i].restaurant[j].open_hour[0])) {
                                             if (stoi(timeV[1]) >= stoi(user[i].restaurant[j].open_hour[1])) {//1
-                                                cout << "1번임" << endl;
+                                               // cout << "1번임" << endl;
                                                 find_R_list.push_back(user[i].restaurant[j]);
                                             }
                                         }
                                         if (stoi(timeV[0]) > stoi(user[i].restaurant[j].open_hour[0])) {
                                             if (stoi(timeV[0]) == stoi(user[i].restaurant[j].open_hour[2])) {
                                                 if (stoi(timeV[1]) < stoi(user[i].restaurant[j].open_hour[3])) {//2
-                                                    cout << "2번임" << endl;
+                                                 //   cout << "2번임" << endl;
                                                     find_R_list.push_back(user[i].restaurant[j]);
                                                 }
                                             }
                                             if (stoi(timeV[0]) < stoi(user[i].restaurant[j].open_hour[2])) {//3
-                                                cout << "3번임" << endl;
+                                              //  cout << "3번임" << endl;
                                                 find_R_list.push_back(user[i].restaurant[j]);
                                             }
                                         }
@@ -806,7 +829,7 @@ void Manager::searchRestaurant()
                                     if (stoi(timeV[0]) == stoi(user[i].restaurant[j].open_hour[0])) {//h==h1
                                         //앞범위인경우
                                         if (stoi(timeV[1]) >= stoi(user[i].restaurant[j].open_hour[1])) {//m>=m1
-                                            cout << "앞 1번임" << endl;
+                                          //  cout << "앞 1번임" << endl;
                                             if (strcmp(getDayIndex(day).c_str(), user[i].restaurant[j].open_hour[4].c_str()) != 0)//내가 입력한 요일이랑 휴무일이랑 다를 경우
                                                 find_R_list.push_back(user[i].restaurant[j]);
                                         }
@@ -815,13 +838,13 @@ void Manager::searchRestaurant()
                                         // 앞범위인경우
                                         if (stoi(timeV[0]) == stoi(user[i].restaurant[j].open_hour[2])) {//h==23
                                             if (stoi(timeV[1]) <= stoi(user[i].restaurant[j].open_hour[3])) {//m<=59
-                                                cout << "앞 2번임" << endl;
+                                            //    cout << "앞 2번임" << endl;
                                                 if (strcmp(getDayIndex(day).c_str(), user[i].restaurant[j].open_hour[4].c_str()) != 0)//내가 입력한 요일이랑 휴무일이랑 다를 경우
                                                     find_R_list.push_back(user[i].restaurant[j]);
                                             }
                                         }
                                         if (stoi(timeV[0]) < stoi(user[i].restaurant[j].open_hour[2])) {//h<23
-                                            cout << "앞 3번임" << endl;
+                                           // cout << "앞 3번임" << endl;
                                             if (strcmp(getDayIndex(day).c_str(), user[i].restaurant[j].open_hour[4].c_str()) != 0)//내가 입력한 요일이랑 휴무일이랑 다를 경우
                                                 find_R_list.push_back(user[i].restaurant[j]);
                                         }
@@ -829,7 +852,7 @@ void Manager::searchRestaurant()
 
                                     if (stoi(timeV[0]) == stoi(user[i].restaurant[j].open_hour[5])) {//h==00
                                         //뒷범위인경우
-                                        cout << "뒤 1번임" << endl;
+                                       // cout << "뒤 1번임" << endl;
                                         if (strcmp(getDayIndex(day).c_str(), user[i].restaurant[j].open_hour[9].c_str()) != 0)//내가 입력한 요일이랑 휴무일이랑 다를 경우
                                             find_R_list.push_back(user[i].restaurant[j]);
                                     }
@@ -837,13 +860,13 @@ void Manager::searchRestaurant()
                                         //뒷범위인경우
                                         if (stoi(timeV[0]) == stoi(user[i].restaurant[j].open_hour[7])) {//h==h2
                                             if (stoi(timeV[1]) < stoi(user[i].restaurant[j].open_hour[8])) {//m<m2
-                                                cout << "뒤 2번임" << endl;
+                                          //      cout << "뒤 2번임" << endl;
                                                 if (strcmp(getDayIndex(day).c_str(), user[i].restaurant[j].open_hour[9].c_str()) != 0)//내가 입력한 요일이랑 휴무일이랑 다를 경우
                                                     find_R_list.push_back(user[i].restaurant[j]);
                                             }
                                         }
                                         if (stoi(timeV[0]) < stoi(user[i].restaurant[j].open_hour[7])) {//h<h2
-                                            cout << "뒤 3번임" << endl;
+                                         //   cout << "뒤 3번임" << endl;
                                             if (strcmp(getDayIndex(day).c_str(), user[i].restaurant[j].open_hour[9].c_str()) != 0)//내가 입력한 요일이랑 휴무일이랑 다를 경우
                                                 find_R_list.push_back(user[i].restaurant[j]);
                                         }
@@ -856,10 +879,10 @@ void Manager::searchRestaurant()
                 }
                 while (true) {
                     if (find_R_list.size() == 0) {
-                        cout << "일치하는 식당정보 없음" << endl;
+                        cout << "일치하는 식당정보 없습니다.\n" << endl;
                         break;
                     }
-                    cout << "**********************식당목록**********************" << endl;
+                    cout << "\n\n*************************************식당목록*************************************" << endl;
                     for (int i = 0; i < find_R_list.size(); i++) {
                         cout << i + 1 << ". ";
                         find_R_list[i].print_info();
@@ -870,7 +893,7 @@ void Manager::searchRestaurant()
                     getline(cin, menu);
                     if (regex_match(menu, menuChecker)) {
                         if (!((stoi(menu) >= 1) && (stoi(menu) <= find_R_list.size() + 1))) {
-                            cout << "1에서 " << find_R_list.size() + 1 << " 중 입력해주세요" << endl;
+                            cout << "잘못된 형식입니다.\n" << endl;
                             continue;
                         }
                         else {
@@ -880,7 +903,7 @@ void Manager::searchRestaurant()
                             else {
                                 find_R_list[stoi(menu) - 1].print_menu();
                                 while (true) {
-                                    cout << "뒤로 가려면 quit를 입력해주세요\n" << ">> ";
+                                    cout << "뒤로 가려면 quit을 입력해주세요\n" << ">> ";
                                     menu.clear();
                                     getline(cin, menu);
                                     trim(menu);
@@ -902,7 +925,7 @@ void Manager::searchRestaurant()
             }
         }
         else {
-            cout << "한글 입력 금지" << endl;
+            cout << "한글 입력 금지\n" << endl;
             continue;
         }
     }
@@ -914,7 +937,7 @@ void Manager::searchRestaurant()
 
 void Manager::readInfoTextFile()
 {
-    cout << "readInfoTextFile" << endl;
+    //cout << "readInfoTextFile" << endl;
     user.clear();//user 초기화
     char readline[16];//한 줄 최대 16글자 id->10, /->1, pw->4, \n->1
     char** temp_info = new char* [2];
@@ -945,7 +968,7 @@ void Manager::readInfoTextFile()
 
 void Manager::readRestTextFile()
 {
-    cout << "readRestTextFile" << endl;
+    //cout << "readRestTextFile" << endl;
     for (int i = 0; i < user.size(); i++) {
         user[i].restaurant.clear();
     }
@@ -979,13 +1002,13 @@ void Manager::readRestTextFile()
     else {
         cout << "Restaurant.txt not open\n\n" << endl;
     }
-    cout << "readRestaurant close" << endl;
+    //cout << "readRestaurant close" << endl;
     readRestaurant.close();
 }
 
 void Manager::readR_InfoTextFile()
 {
-    cout << "void Manager::readR_InfoTextFile()" << endl;
+    //cout << "void Manager::readR_InfoTextFile()" << endl;
     for (int i = 0; i < user.size(); i++) {
         for (int j = 0; j < user[i].restaurant.size(); j++) {
             user[i].restaurant[j].open_hour.clear();
@@ -1076,9 +1099,9 @@ void Manager::readR_InfoTextFile()
 void Manager::readR_MenuTextFile()
 {
     //메뉴 최대 3개, 저장금액 최대 5자리
-    cout << "readR_MenuTextFile()" << endl;
+    //cout << "readR_MenuTextFile()" << endl;
     for (int i = 0; i < user.size(); i++) {
-        for (int j = 0; j < user[i].restaurant.size(); i++) {
+        for (int j = 0; j < user[i].restaurant.size(); j++) {
             user[i].restaurant[j].menu.clear();
         }
     }
@@ -1136,11 +1159,13 @@ void Manager::ManageRestaurant()
             if (!(current_user->restaurant.at(select - 1).menu.empty() || current_user->restaurant.at(select - 1).open_hour.empty())) {
                 while (true) {
                     //full info
+                   // cin.ignore();
                     cout << "부가정보 수정" << endl;
                     cout << "1. 메뉴/가격 수정 \n2. 주소/시간/휴무일 수정 \n3. 이전메뉴" << endl;
                     cout << "보기 선택: ";
                     int select_menu2;
                     cin >> select_menu2;
+                    if (isQuit(to_string(select_menu2))) continue;
                     cin.ignore();//버퍼 제거
                     if (select_menu2 == 3) break;
                     if (select_menu2 < 3 && select_menu2 >= 1) {
@@ -1154,10 +1179,16 @@ void Manager::ManageRestaurant()
                             while (true) {
                                 // writeR_MenuTextFile();
                                 vector<Menu>::iterator iter = current_user->restaurant.at(select - 1).menu.begin();
-
+                                if (current_user->restaurant.at(select - 1).menu.size() == 3) {
+                                    cout << "메뉴를 더이상 추가할 수 없습니다." << endl;
+                                }
                                 current_user->restaurant.at(select - 1).print_menu();
                                 cout << "메뉴/(가격) 입력: ";
                                 getline(cin, input);
+                                if (!isin0to128(input)) {
+                                    cout << "한국어 입력 금지" << endl;
+                                    continue;
+                                }
                                 char* data_buff = new char[input.size() + 1];
                                 strcpy(data_buff, input.c_str());
                                 int scount = 0;
@@ -1165,7 +1196,7 @@ void Manager::ManageRestaurant()
                                     if ((int)input[i] == 47)
                                         scount++;
                                 }
-                                cout << "scount : " << scount << endl;
+                                // cout << "scount : " << scount << endl;
                                 trim(input);//앞뒤공백은 자르기
 
                                 if (scount == 0 && !isQuit(input)) {
@@ -1203,7 +1234,7 @@ void Manager::ManageRestaurant()
                                                 }
                                                 writeR_MenuTextFile();
 
-                                                cout << "삭제완료!" << endl;
+                                                cout << "삭제 완료" << endl;
                                                 continue;
                                             }
                                             else {
@@ -1211,7 +1242,7 @@ void Manager::ManageRestaurant()
                                             }
                                         }
                                         else {
-                                            cout << "입력 메뉴얼을 확인하세요" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                         }
                                     }
 
@@ -1229,7 +1260,7 @@ void Manager::ManageRestaurant()
                                     }
                                     else {
                                         if (M_price.empty())
-                                            cout << "데이터 개수 부족" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                     trim(M_name);
@@ -1242,7 +1273,7 @@ void Manager::ManageRestaurant()
                                             M_name[i] = tolower(M_name[i]);
                                         }
                                         if (!isMoney(M_price)) {
-                                            cout << "가격 형식 확인" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
                                         bool add = true;
@@ -1271,7 +1302,7 @@ void Manager::ManageRestaurant()
                                                         user.at(j).restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
                                                 }
                                                 writeR_MenuTextFile();
-                                                cout << "추가완료!" << endl;
+                                                cout << "추가 완료!" << endl;
                                                 continue;
                                             }
                                             else {
@@ -1294,7 +1325,7 @@ void Manager::ManageRestaurant()
                                                 }
                                             }
                                             writeR_MenuTextFile();
-                                            cout << "수정완료!" << endl;
+                                            cout << "수정 완료!" << endl;
                                         }
                                         else {
                                             continue;
@@ -1339,7 +1370,7 @@ void Manager::ManageRestaurant()
                                         }
                                     }
                                     else {//둘다 정규식 안맞음->재입력
-                                        cout << "메뉴/가격 형식 확인바람" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                 }
@@ -1360,8 +1391,12 @@ void Manager::ManageRestaurant()
                             regex adrChecker("[a-zA-Z0-9]+");//알파벳+숫자만입력
                             while (true) {
                                 current_user->restaurant.at(select - 1).print_info2();
-                                cout << "시간/휴무정보: ";
+                                cout << "주소/시간/휴무정보: ";
                                 getline(cin, input);
+                                if (!isin0to128(input)) {
+                                    cout << "한국어 입력 금지" << endl;
+                                    continue;
+                                }
                                 char* data_buff = new char[input.size() + 1];
                                 strcpy(data_buff, input.c_str());
                                 //trim(input);//앞뒤공백은 자르기
@@ -1370,7 +1405,7 @@ void Manager::ManageRestaurant()
                                     if ((int)input[i] == 47)
                                         scount++;
                                 }
-                                cout << "scount : " << scount << endl;
+                                // cout << "scount : " << scount << endl;
                                 trim(input);
                                 if (isQuit(input)) break;
 
@@ -1387,7 +1422,7 @@ void Manager::ManageRestaurant()
                                         }
                                         int k = 0;
                                         if (current_user->restaurant.at(select - 1).close_day.at(0) == input) {
-                                            cout << "휴무일 " << input << " 삭제?" << endl;
+                                            cout << "휴무일 " << input << " 삭제" << endl;
                                             if (yesorno()) {
                                                 current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
                                                 current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
@@ -1398,11 +1433,12 @@ void Manager::ManageRestaurant()
                                                     }
                                                 }
                                                 writeR_InfoTextFile();
+                                                cout << "삭제 완료" << endl;
                                             }
                                             else continue;
                                         }
                                         else {
-                                            cout << "휴무일 " << input << " 변경?" << endl;
+                                            cout << "휴무일 " << input << " 수정" << endl;
                                             if (yesorno()) {
                                                 current_user->restaurant.at(select - 1).close_day.at(0) = input;
                                                 for (k = 0; k < 7; k++) {
@@ -1420,7 +1456,7 @@ void Manager::ManageRestaurant()
                                                     }
                                                 }
                                                 writeR_InfoTextFile();
-                                                cout << "휴무일 수정완료" << endl;
+                                                cout << "수정 완료" << endl;
                                             }
                                             else continue;
                                         }
@@ -1432,16 +1468,16 @@ void Manager::ManageRestaurant()
 
                                         if (stoi(match_one.str(1)) == stoi(match_one.str(3)) && stoi(match_one.str(2)) == stoi(match_one.str(4)))
                                         {
-                                            cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
 
                                         if (!(stoi(match_one.str(1)) < 24 && stoi(match_one.str(3)) < 24 && stoi(match_one.str(2)) < 60 && stoi(match_one.str(4)) < 60))
                                         {
-                                            cout << "24시간 형식에 맞춰주세요" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
-                                        cout << "영업시간이 " << input << " 로 변경됨" << endl;
+                                        cout << "영업시간 " << input << " 수정" << endl;
                                         if (yesorno()) {
                                             string temp[4];
                                             temp->clear();
@@ -1483,7 +1519,7 @@ void Manager::ManageRestaurant()
                                                 }
                                             }
                                             writeR_InfoTextFile();
-                                            cout << "영업시간수정완료" << endl;
+                                            cout << "수정 완료" << endl;
                                         }
                                         else {
                                             continue;
@@ -1502,11 +1538,11 @@ void Manager::ManageRestaurant()
                                             }
                                         }
                                         if (!(check)) {
-                                            cout << "주소 규칙위반" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
                                         else {
-                                            cout << "주소 " << input << " 으로 변경됨" << endl;
+                                            cout << "주소 " << input << " 수정" << endl;
                                             if (yesorno()) {
                                                 current_user->restaurant.at(select - 1).address = input;
                                                 cout << input << endl;
@@ -1517,7 +1553,7 @@ void Manager::ManageRestaurant()
                                                 }
                                                 writeR_InfoTextFile();
                                                 writeRestTextFile();
-                                                cout << "주소 수정 완료" << endl;
+                                                cout << "수정 완료" << endl;
                                             }
                                             else continue;
                                         }
@@ -1541,7 +1577,7 @@ void Manager::ManageRestaurant()
                                         trim(str2);
                                     }
                                     else {
-                                        cout << "데이터 개수 부족" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                     cout << str1 << "/" << str2 << endl;
@@ -1561,17 +1597,17 @@ void Manager::ManageRestaurant()
                                                 current_user->restaurant.at(select - 1).open_hour.clear();
                                                 if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
                                                 {
-                                                    cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
 
                                                 if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
                                                 {
-                                                    cout << "24시간 형식에 맞춰주세요" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
-                                                cout << "휴무일 " << str1 << "삭제" << endl;
-                                                cout << "영업시간: " << str2 << endl;
+                                                cout << "휴무일 " << str1 << " 삭제" << endl;
+                                                cout << "영업시간: " << str2 << " 수정" << endl;
                                                 if (yesorno()) {
                                                     string temp[4];
                                                     temp->clear();
@@ -1626,7 +1662,7 @@ void Manager::ManageRestaurant()
                                                         }
                                                     }
                                                     writeR_InfoTextFile();
-                                                    cout << "수정완료" << endl;
+                                                    cout << "수정 완료" << endl;
                                                     break;
                                                 }
                                                 else {
@@ -1646,12 +1682,12 @@ void Manager::ManageRestaurant()
                                                     }
                                                 }
                                                 if (!(check)) {
-                                                    cout << "주소 규칙위반" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
                                                 else {
-                                                    cout << "휴무일 " << str1 << "삭제" << endl;
-                                                    cout << "주소 " << str2 << "수정" << endl;
+                                                    cout << "휴무일 " << str1 << " 삭제" << endl;
+                                                    cout << "주소 " << str2 << " 수정" << endl;
                                                     if (yesorno()) {
                                                         current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
                                                         current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
@@ -1685,17 +1721,17 @@ void Manager::ManageRestaurant()
                                                 current_user->restaurant.at(select - 1).open_hour.clear();
                                                 if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
                                                 {
-                                                    cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
 
                                                 if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
                                                 {
-                                                    cout << "24시간 형식에 맞춰주세요" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
-                                                cout << "휴무일 " << str1 << " 변경" << endl;
-                                                cout << "영업시간: " << str2 << endl;
+                                                cout << "휴무일 " << str1 << " 수정" << endl;
+                                                cout << "영업시간: " << str2 << " 수정" << endl;
                                                 if (yesorno()) {
                                                     string temp[4];
                                                     temp->clear();
@@ -1753,7 +1789,7 @@ void Manager::ManageRestaurant()
                                                         }
                                                     }
                                                     writeR_InfoTextFile();
-                                                    cout << "수정완료" << endl;
+                                                    cout << "수정 완료" << endl;
                                                     continue;
                                                 }
                                                 else {
@@ -1773,12 +1809,12 @@ void Manager::ManageRestaurant()
                                                     }
                                                 }
                                                 if (!(check)) {
-                                                    cout << "주소 규칙위반" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
                                                 else {
-                                                    cout << "휴무일 " << str1 << "변경" << endl;
-                                                    cout << "주소 " << str2 << "수정" << endl;
+                                                    cout << "휴무일 " << str1 << " 수정" << endl;
+                                                    cout << "주소 " << str2 << " 수정" << endl;
                                                     if (yesorno()) {
                                                         current_user->restaurant.at(select - 1).close_day.at(0) = str1;
                                                         for (k = 0; k < 7; k++) {
@@ -1825,17 +1861,17 @@ void Manager::ManageRestaurant()
                                                 current_user->restaurant.at(select - 1).open_hour.clear();
                                                 if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
                                                 {
-                                                    cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
 
                                                 if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
                                                 {
-                                                    cout << "24시간 형식에 맞춰주세요" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
-                                                cout << "휴무일 " << str2 << "삭제" << endl;
-                                                cout << "영업시간: " << str1 << endl;
+                                                cout << "휴무일 " << str2 << " 삭제" << endl;
+                                                cout << "영업시간: " << str1 << " 수정" << endl;
                                                 if (yesorno()) {
                                                     string temp[4];
                                                     temp->clear();
@@ -1887,7 +1923,7 @@ void Manager::ManageRestaurant()
                                                         }
                                                     }
                                                     writeR_InfoTextFile();
-                                                    cout << "수정완료" << endl;
+                                                    cout << "수정 완료" << endl;
                                                     break;
                                                 }
                                                 else {
@@ -1907,12 +1943,12 @@ void Manager::ManageRestaurant()
                                                     }
                                                 }
                                                 if (!(check)) {
-                                                    cout << "주소 규칙위반" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
                                                 else {
-                                                    cout << "휴무일 " << str2 << "삭제" << endl;
-                                                    cout << "주소 " << str1 << "수정" << endl;
+                                                    cout << "휴무일 " << str2 << " 삭제" << endl;
+                                                    cout << "주소 " << str1 << " 수정" << endl;
                                                     if (yesorno()) {
                                                         current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
                                                         current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
@@ -1947,17 +1983,17 @@ void Manager::ManageRestaurant()
                                                 current_user->restaurant.at(select - 1).open_hour.clear();
                                                 if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
                                                 {
-                                                    cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
 
                                                 if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
                                                 {
-                                                    cout << "24시간 형식에 맞춰주세요" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
-                                                cout << "휴무일 " << str2 << " 변경" << endl;
-                                                cout << "영업시간: " << str1 << endl;
+                                                cout << "휴무일 " << str2 << " 수정" << endl;
+                                                cout << "영업시간: " << str1 << " 수정" << endl;
                                                 if (yesorno()) {
                                                     string temp[4];
                                                     temp->clear();
@@ -2008,7 +2044,7 @@ void Manager::ManageRestaurant()
                                                         }
                                                     }
                                                     writeR_InfoTextFile();
-                                                    cout << "수정완료" << endl;
+                                                    cout << "수정 완료" << endl;
                                                     continue;
                                                 }
                                                 else {
@@ -2028,12 +2064,12 @@ void Manager::ManageRestaurant()
                                                     }
                                                 }
                                                 if (!(check)) {
-                                                    cout << "주소 규칙위반" << endl;
+                                                    cout << "잘못된 형식입니다." << endl;
                                                     continue;
                                                 }
                                                 else {
-                                                    cout << "휴무일 " << str2 << "변경" << endl;
-                                                    cout << "주소 " << str1 << "수정" << endl;
+                                                    cout << "휴무일 " << str2 << " 수정" << endl;
+                                                    cout << "주소 " << str1 << " 수정" << endl;
                                                     if (yesorno()) {
                                                         current_user->restaurant.at(select - 1).close_day.at(0) = str2;
                                                         for (k = 0; k < 7; k++) {
@@ -2085,7 +2121,7 @@ void Manager::ManageRestaurant()
                                                 }
                                             }
                                             if (!(check)) {
-                                                cout << "주소 규칙위반" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
                                             else {//주소 검사 통과 
@@ -2097,12 +2133,12 @@ void Manager::ManageRestaurant()
                                                 {
                                                     if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
                                                     {
-                                                        cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                        cout << "잘못된 형식입니다." << endl;
                                                         continue;
                                                     }
 
-                                                    cout << "주소 변경 " << str1 << endl;
-                                                    cout << "영업 시간 " << str2 << endl;
+                                                    cout << "주소 " << str1 << " 수정" << endl;
+                                                    cout << "영업 시간 " << str2 << " 수정" << endl;
                                                     if (yesorno()) {
                                                         string temp[4];
                                                         temp->clear();
@@ -2159,7 +2195,7 @@ void Manager::ManageRestaurant()
                                                         }
                                                         writeR_InfoTextFile();
                                                         writeRestTextFile();
-                                                        cout << "수정완료" << endl;
+                                                        cout << "수정 완료" << endl;
                                                         continue;
                                                     }
                                                     else {
@@ -2187,7 +2223,7 @@ void Manager::ManageRestaurant()
                                                 }
                                             }
                                             if (!(check)) {
-                                                cout << "주소 규칙위반" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
                                             else {//주소 검사 통과 
@@ -2199,12 +2235,12 @@ void Manager::ManageRestaurant()
                                                 {
                                                     if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
                                                     {
-                                                        cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                        cout << "잘못된 형식입니다.." << endl;
                                                         continue;
                                                     }
 
-                                                    cout << "주소 변경 " << str1 << endl;
-                                                    cout << "영업 시간 " << str2 << endl;
+                                                    cout << "주소 " << str1 << " 수정" << endl;
+                                                    cout << "영업 시간 " << str2 << " 수정" << endl;
                                                     if (yesorno()) {
                                                         string temp[4];
                                                         temp->clear();
@@ -2261,7 +2297,7 @@ void Manager::ManageRestaurant()
                                                         }
                                                         writeR_InfoTextFile();
                                                         writeRestTextFile();
-                                                        cout << "수정완료" << endl;
+                                                        cout << "수정 완료" << endl;
                                                         continue;
                                                     }
                                                     else {
@@ -2296,7 +2332,7 @@ void Manager::ManageRestaurant()
                                         trim(strd.at(2));
                                     }
                                     else {
-                                        cout << "데이터 개수 부족" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                     cout << strd.at(0) << "/" << strd.at(1) << "/" << strd.at(2) << endl;
@@ -2326,13 +2362,13 @@ void Manager::ManageRestaurant()
                                             current_user->restaurant.at(select - 1).open_hour.clear();
                                             if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
                                             {
-                                                cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
 
                                             if (!(stoi(match3.str(1)) < 24 && stoi(match3.str(3)) < 24 && stoi(match3.str(2)) < 60 && stoi(match3.str(4)) < 60))
                                             {
-                                                cout << "24시간 형식에 맞춰주세요" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
                                             bool check = false;
@@ -2346,12 +2382,12 @@ void Manager::ManageRestaurant()
                                                 }
                                             }
                                             if (!(check)) {
-                                                cout << "주소 규칙위반" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
-                                            cout << "휴무일 " << day << "삭제" << endl;
-                                            cout << "영업시간: " << time << endl;
-                                            cout << "주소: " << adr << endl;
+                                            cout << "휴무일 " << day << " 삭제" << endl;
+                                            cout << "영업시간: " << time << " 수정" << endl;
+                                            cout << "주소: " << adr << " 수정" << endl;
                                             if (yesorno()) {
                                                 string temp[4];
                                                 temp->clear();
@@ -2416,7 +2452,7 @@ void Manager::ManageRestaurant()
                                                 }
                                                 writeR_InfoTextFile();
                                                 writeRestTextFile();
-                                                cout << "수정완료" << endl;
+                                                cout << "수정 완료" << endl;
                                                 break;
                                             }
                                             else {
@@ -2438,13 +2474,13 @@ void Manager::ManageRestaurant()
                                             current_user->restaurant.at(select - 1).open_hour.clear();
                                             if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
                                             {
-                                                cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                cout << "잘못된 형식입니다.." << endl;
                                                 continue;
                                             }
 
                                             if (!(stoi(match3.str(1)) < 24 && stoi(match3.str(3)) < 24 && stoi(match3.str(2)) < 60 && stoi(match3.str(4)) < 60))
                                             {
-                                                cout << "24시간 형식에 맞춰주세요" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
                                             bool check = false;
@@ -2458,12 +2494,12 @@ void Manager::ManageRestaurant()
                                                 }
                                             }
                                             if (!(check)) {
-                                                cout << "주소 규칙위반" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
-                                            cout << "휴무일 " << day << " 변경" << endl;
-                                            cout << "영업시간: " << time << endl;
-                                            cout << "주소: " << adr << endl;
+                                            cout << "휴무일 " << day << " 수정" << endl;
+                                            cout << "영업시간: " << time << " 수정" << endl;
+                                            cout << "주소: " << adr << " 수정" << endl;
                                             if (yesorno()) {
 
                                                 string temp[4];
@@ -2532,7 +2568,7 @@ void Manager::ManageRestaurant()
                                                 }
                                                 writeR_InfoTextFile();
                                                 writeRestTextFile();
-                                                cout << "수정완료" << endl;
+                                                cout << "수정 완료" << endl;
                                                 continue;
                                             }
                                             else {
@@ -2541,6 +2577,7 @@ void Manager::ManageRestaurant()
                                         }
                                         else
                                         {
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
 
@@ -2556,14 +2593,20 @@ void Manager::ManageRestaurant()
 
                             }
                         }
-                        else
-                            cout << "다시 입력해 주세요" << endl;
-
-                        if (cin.fail()) {
+                        else {
+                            cout << "잘못된 형식입니다." << endl;
                             cin.clear();
-                            cin.ignore(INT_MAX, '\n');
-                            cout << "다시 입력해주세요" << endl;
                         }
+                    }
+                    else if (cin.fail()) {
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                        cout << "잘못된 형식입니다." << endl;
+                    }
+                    else {
+                        cin.clear();
+                        cin.ignore(INT_MAX, '\n');
+                        cout << "잘못된 형식입니다." << endl;
                     }
                 }
             }
@@ -2589,8 +2632,17 @@ void Manager::ManageRestaurant()
                             regex M_name_Checker("[a-zA-Z\\s]*");
                             // regex M_price_Checker("^[1-9]?(,|[0-9])[\\S]*");
                             while (true) {
+                                cout << "메뉴는 영어 소문자와 공백으로 1~15자 이내로 입력해주세요" << endl;
+                                cout << "2개이상의 공백은 1개로 치환되며 맨 앞, 맨 뒤 공백은 제거됩니다." << endl;
+                                cout << "가격은 100~99999 의 범위로 제한 합니다." << endl;
+                                cout << "쉼표는 맨 앞이 아닌 어디든 등장할 수 있고, 두개를 연속으로 사용할 수 없습니다." << endl;
+                                cout << "각 데이터는 (/)로 구분해서 입력해주세요" << endl;
                                 cout << "메뉴/가격정보: ";
                                 getline(cin, input);
+                                if (!isin0to128(input)) {
+                                    cout << "한국어 입력 금지" << endl;
+                                    continue;
+                                }
                                 char* data_buff = new char[input.size() + 1];
                                 strcpy(data_buff, input.c_str());
                                 //trim(input);//앞뒤공백은 자르기
@@ -2599,11 +2651,11 @@ void Manager::ManageRestaurant()
                                     if ((int)input[i] == 47)
                                         scount++;
                                 }
-                                cout << "scount : " << scount << endl;
+                                //cout << "scount : " << scount << endl;
 
                                 if (scount != 1) {
                                     if (isQuit(input)) break;
-                                    cout << "슬래시 개수부족" << endl;
+                                    cout << "잘못된 형식입니다." << endl;
                                     continue;//슬래시 1개 아니면 다시입력받기
                                 }
                                 trim(input);//앞뒤공백은 자르기
@@ -2619,7 +2671,7 @@ void Manager::ManageRestaurant()
                                         M_price = (string)stv[1];
                                     }
                                     else {
-                                        cout << "데이터 개수 부족" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                     trim(M_name);
@@ -2631,7 +2683,7 @@ void Manager::ManageRestaurant()
                                             M_name[i] = tolower(M_name[i]);
                                         }
                                         if (!isMoney(M_price)) {
-                                            cout << "가격 형식 확인" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
 
@@ -2657,7 +2709,7 @@ void Manager::ManageRestaurant()
                                             writeFile.close();
                                             readR_MenuTextFile();
                                             //menu.push_back(Menu(price, M_name));
-                                            cout << "등록완료!" << endl;
+                                            cout << "등록 완료" << endl;
                                             break;
                                         }
                                         else {
@@ -2674,7 +2726,7 @@ void Manager::ManageRestaurant()
                                             M_name[i] = tolower(M_name[i]);
                                         }
                                         if (!isMoney(M_price)) {
-                                            cout << "가격 형식 확인" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
                                         if (M_price.find(",") != -1) {
@@ -2697,7 +2749,7 @@ void Manager::ManageRestaurant()
                                             }
                                             writeFile.close();
                                             readR_MenuTextFile();
-                                            cout << "등록완료!" << endl;
+                                            cout << "등록 완료" << endl;
                                             break;
                                         }
                                         else {
@@ -2705,7 +2757,7 @@ void Manager::ManageRestaurant()
                                         }
                                     }
                                     else {//둘다 정규식 안맞음->재입력
-                                        cout << "메뉴/가격 형식 확인바람" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                 }
@@ -2726,8 +2778,18 @@ void Manager::ManageRestaurant()
                             regex Time_Checker("([0-9]{1,2})\:([0-9]{1,2})\~([0-9]{1,2})\:([0-9]{1,2})*$");
                             regex Day_Checker("^[a-zA-Z]+(DAY|DAy|DaY|Day|day|daY|dAY|dAy)$");
                             while (true) {
+                                cout << "영업시간은 24시간 형식으로 사용하여 주시고 00시와 24시의 혼동을 없애기 위해 24시는 입력받지 않습니다." << endl;
+                                cout << "시작 시간과 종료 시간은 특수문자(~)로 구분되며 각 시간의 시와 분은 (:)로 구분됩니다." << endl;
+                                cout << "공백 입력은 금지됩니다." << endl;
+                                cout << "휴무일은 영문 소문자로 monday, tuesday, wednesday thursday friday saturday sunday 중 하나를 입력받습니다." << endl;
+                                cout << "영업시간은 필수로 등록해야 하지만 휴무일은 등록하지 않아도 됩니다." << endl;
+                                cout << "각 데이터는 (/)로 구분해서 입력해주세요" << endl;
                                 cout << "시간/휴무정보: ";
                                 getline(cin, input);
+                                if (!isin0to128(input)) {
+                                    cout << "한국어 입력 금지" << endl;
+                                    continue;
+                                }
                                 char* data_buff = new char[input.size() + 1];
                                 strcpy(data_buff, input.c_str());
                                 //trim(input);//앞뒤공백은 자르기
@@ -2736,7 +2798,7 @@ void Manager::ManageRestaurant()
                                     if ((int)input[i] == 47)
                                         scount++;
                                 }
-                                cout << "scount : " << scount << endl;
+                                //cout << "scount : " << scount << endl;
 
                                 if (scount != 1) {
                                     if (isQuit(input)) break;
@@ -2744,13 +2806,13 @@ void Manager::ManageRestaurant()
                                     if (regex_match(input, match, Time_Checker)) {
                                         if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
                                         {
-                                            cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
 
                                         if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
                                         {
-                                            cout << "24시간 형식에 맞춰주세요" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
                                         cout << "영업시간: " << input << endl;
@@ -2818,7 +2880,7 @@ void Manager::ManageRestaurant()
                                                 writeFile.close();
                                             }
                                             readR_InfoTextFile();
-                                            cout << "등록완료" << endl;
+                                            cout << "등록 완료" << endl;
                                             break;
                                         }
                                         else {
@@ -2826,10 +2888,10 @@ void Manager::ManageRestaurant()
                                         }
                                     }
                                     else {
-                                        cout << "시간 형식 확인" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
-                                    cout << "슬래시 개수부족" << endl;
+                                    cout << "잘못된 형식입니다." << endl;
                                     continue;//슬래시 1개 아니면 다시입력받기
                                 }
                                 trim(input);//앞뒤공백은 자르기
@@ -2845,7 +2907,7 @@ void Manager::ManageRestaurant()
                                         close_day = (string)stv[1];
                                     }
                                     else {
-                                        cout << "데이터 개수 부족" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                     trim(hour);
@@ -2860,13 +2922,13 @@ void Manager::ManageRestaurant()
                                         if (regex_match(hour, match, Time_Checker)) {
                                             if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
                                             {
-                                                cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
 
                                             if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
                                             {
-                                                cout << "24시간 형식에 맞춰주세요" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
                                             cout << "영업시간: " << hour << endl;
@@ -2944,7 +3006,7 @@ void Manager::ManageRestaurant()
                                                     writeFile.close();
                                                 }
                                                 readR_InfoTextFile();
-                                                cout << "등록완료" << endl;
+                                                cout << "등록 완료" << endl;
                                                 break;
                                             }
                                             else {
@@ -2952,7 +3014,7 @@ void Manager::ManageRestaurant()
                                             }
                                         }
                                         else {
-                                            cout << "시간 형식 확인" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
                                     }
@@ -2968,13 +3030,13 @@ void Manager::ManageRestaurant()
                                         if (regex_match(hour, match, Time_Checker)) {
                                             if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
                                             {
-                                                cout << "시작/종료 시간은 같을수 없습니다." << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
 
                                             if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
                                             {
-                                                cout << "24시간 형식에 맞춰주세요" << endl;
+                                                cout << "잘못된 형식입니다." << endl;
                                                 continue;
                                             }
                                             cout << "영업시간: " << hour << endl;
@@ -3048,7 +3110,7 @@ void Manager::ManageRestaurant()
                                                     writeFile.close();
                                                 }
                                                 readR_InfoTextFile();
-                                                cout << "등록완료" << endl;
+                                                cout << "등록 완료" << endl;
                                                 break;
                                             }
                                             else {
@@ -3056,12 +3118,12 @@ void Manager::ManageRestaurant()
                                             }
                                         }
                                         else {
-                                            cout << "시간 형식 확인" << endl;
+                                            cout << "잘못된 형식입니다." << endl;
                                             continue;
                                         }
                                     }
                                     else {//둘다 정규식 안맞음->재입력
-                                        cout << "휴무일/시간 형식 확인바람" << endl;
+                                        cout << "잘못된 형식입니다." << endl;
                                         continue;
                                     }
                                 }
@@ -3072,28 +3134,24 @@ void Manager::ManageRestaurant()
                             }
                         }
                     }
-                    else
-                        cout << "다시 입력해 주세요" << endl;
-
-                    if (cin.fail()) {
+                    else{
                         cin.clear();
                         cin.ignore(INT_MAX, '\n');
-                        cout << "다시 입력해주세요" << endl;
+                        cout << "잘못된 형식입니다." << endl;
                     }
+                        
                 }
             }
         }
         else {
-            cout << "다시 입력해 주세요\n\n" << endl;
-        }
-        if (cin.fail()) {
             cin.clear();
             cin.ignore(INT_MAX, '\n');
-            cout << "다시 입력해주세요" << endl;
+            cout << "잘못된 형식입니다." << endl;
 
         }
     }
 }
+
 
 string Manager::getDayIndex(string str)
 {
@@ -3110,7 +3168,7 @@ string Manager::getDayIndex(string str)
 bool Manager::isin0to128(string str)
 {
     int i = 0;
-    cout << str << endl;
+    //cout << str << endl;
     for (i = 0; i < str.size(); i++) {
         if (!(((int)str[i] >= 0) && ((int)str[i] <= 127))) {
             return false;
@@ -3131,7 +3189,7 @@ bool Manager::isSpace(string str)
     for (int i = 0; i < str.length(); i++) {
         const char* check = str.c_str();
         if (isspace(check[i])) {
-            cout << "공백없이 입력해주세요" << endl;
+            cout << "공백없이 입력해주세요\n" << endl;
             return true;
         }
     }

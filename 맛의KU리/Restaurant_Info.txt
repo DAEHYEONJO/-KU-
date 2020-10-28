@@ -4,3 +4,5 @@ new please/hwayang6dong/18:00~23:00/wednesday
 lastsick/hwayang3dong/12:44~23:59,00:00~04:33
 si bal/hwayang5dong/13:00~02:01/friday
 eeeeeee/hwayang3dong/13:49~23:59,00:00~02:03/monday
+hwaya yang/hwayang3dong/12:00~23:59,00:00~23:33/monday
+hwa yang/hwayang3dong/12:00~23:59,00:00~02:44/tuesday

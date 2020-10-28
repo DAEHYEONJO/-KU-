@@ -22,12 +22,6 @@ public:
 	void print_close_day();
 	bool set_open_hour(string time);
 	bool register_Status();
-	void change_info();
-	void more_info();
-	void addMenu();
-	void addMore_info();
-	void setMenu();
-	void setMore_info();
 	~Restaurant();
 };
 
