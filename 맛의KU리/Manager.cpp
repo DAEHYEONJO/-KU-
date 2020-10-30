@@ -135,7 +135,7 @@ int Manager::logIn()
         cout << "id : ";
         string test_id, test_pw;
         getline(cin, test_id);
-        if (!isin0to128(test_pw)) {
+        if (!isin0to128(test_id)) {
             cout << "한국어 입력 금지" << endl;
             continue;
         }
@@ -259,6 +259,9 @@ bool Manager::isMoney(string str)
 {
     regex money("^[1-9]+[0-9,].*$");
     if (regex_match(str, money)) {
+        if (isSpace(str)) {
+            return false;
+        }
         int i = 0;
         int cc = 0;
         for (i = 0; i < str.size() - 1; i++) {
