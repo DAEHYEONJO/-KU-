@@ -44,7 +44,10 @@ void Restaurant::print_info2()
 	else
 		cout << "휴무일 : " << this->close_day.at(0) << " index: " << this->close_day.at(1) << endl;
 
-	cout << "영업시간 : " << this->open_hour.at(0) << ":" << this->open_hour.at(1) << " ~ " << this->open_hour.at(open_hour.size() - 3) << ":" << this->open_hour.at(open_hour.size() - 2) << endl;
+	//cout << "영업시간 : " << this->open_hour.at(0) << ":" << this->open_hour.at(1) << " ~ " << this->open_hour.at(open_hour.size() - 3) << ":" << this->open_hour.at(open_hour.size() - 2) << endl;
+	cout << "open_hour size : " << open_hour.size() << endl;
+	if(!open_hour.empty())
+		cout << "영업시간 : " << this->open_hour.at(0) << ":" << this->open_hour.at(1) << " ~ " << this->open_hour.at(open_hour.size() - 3) << ":" << this->open_hour.at(open_hour.size() - 2) << endl;
 }
 void Restaurant::print_close_day()
 {

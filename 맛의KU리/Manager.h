@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "User.h"
-
+#include <Windows.h>
+#include <tchar.h>
 class Manager
 {
 public:
@@ -11,6 +12,7 @@ public:
    int signUp();
    int logIn();
    void loginMenu();
+   string save_Openhour(int index, smatch match, string humoo);
    bool isMoney(string str);
    void writeRestTextFile();
    void writeR_MenuTextFile();

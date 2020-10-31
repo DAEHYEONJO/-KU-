@@ -56,7 +56,7 @@ int Manager::signUp()
         cout << "id는 숫자와 영문자 조합이며, 6자리~10자리로 입력하세요\nid : ";
         getline(cin, test_id);
         if (!isin0to128(test_id)) {
-            cout << "한국어 입력 금지" << endl;
+            cout << "한국어 입력 금지\n" << endl;
             continue;
         }
 
@@ -71,7 +71,7 @@ int Manager::signUp()
                         for (count = 0; count < user.size(); count++) {//text file 중복검사
                             //cout << "저장값 : " << user[count].id.c_str() << "입력값 : " << test_id << endl;
                             if (!strcmp(user[count].id.c_str(), test_id.c_str())) {
-                              
+
                                 break;
                             }
                         }
@@ -82,13 +82,14 @@ int Manager::signUp()
                                 regex pwChecker("^[0-9]{4}$");
                                 getline(cin, test_pw);//pw입력받기
                                 if (!isin0to128(test_pw)) {
-                                    cout << "한국어 입력 금지" << endl;
+                                    cout << "한국어 입력 금지\n" << endl;
                                     continue;
                                 }
                                 if (regex_match(test_pw, pwChecker)) {
                                     cout << "회원가입 완료\n" << endl;
                                     //info.txt에 해당 아이디 패스워드 추가하기.
                                     ofstream writeFile;
+                                    SetFileAttributes(_T("info.txt"), FILE_ATTRIBUTE_NORMAL);
                                     writeFile.open("info.txt", std::ofstream::out | std::ofstream::app);//쓰기모드, 이어서 추가하기
                                     if (writeFile.is_open()) {
                                         string merge = test_id + "/" + test_pw + "\n";
@@ -97,6 +98,7 @@ int Manager::signUp()
                                     else {
                                         cout << "파일 오픈 오류\n" << endl;
                                     }
+                                    SetFileAttributes(_T("info.txt"), FILE_ATTRIBUTE_READONLY);
                                     writeFile.close();
                                     readInfoTextFile();//새로 추가되었으니 user벡터에 추가해주기
                                     return 1;
@@ -136,7 +138,7 @@ int Manager::logIn()
         string test_id, test_pw;
         getline(cin, test_id);
         if (!isin0to128(test_id)) {
-            cout << "한국어 입력 금지" << endl;
+            cout << "한국어 입력 금지\n" << endl;
             continue;
         }
         if (isSpace(test_id)) continue;
@@ -162,7 +164,7 @@ int Manager::logIn()
                                 regex pwChecker("^[0-9]{4}$");
                                 getline(cin, test_pw);//pw입력받기
                                 if (!isin0to128(test_pw)) {
-                                    cout << "한국어 입력 금지" << endl;
+                                    cout << "한국어 입력 금지\n" << endl;
                                     continue;
                                 }
                                 if (isQuit(test_pw)) break;
@@ -298,7 +300,7 @@ bool Manager::yesorno()
     string c = "";
     regex ynCheck("(y)|(n){1}$");
     while (true) {
-        cout << "input y or n : ";
+        cout << "\n\ninput y or n : ";
         getline(cin, c);
         if (!isin0to128(c)) {
             cout << "한국어 입력 금지\n" << endl;
@@ -333,7 +335,7 @@ bool Manager::isDay(string str)
                 }
             }
             if (i == 7) {
-                cout << "monday ~ sunday 중 입력바랍니다.\n" << endl;
+                cout << "\nmonday ~ sunday 중 입력바랍니다.\n" << endl;
                 return false;
             }
         }
@@ -380,7 +382,7 @@ bool Manager::isAddress(string str)
                 }
             }
             if (i == 10) {
-                cout << "hwayang1dong~hwayang10dong 중 입력 바랍니다.\n" << endl;
+                cout << "\nhwayang1dong~hwayang10dong 중 입력 바랍니다.\n" << endl;
                 return false;
             }
         }
@@ -396,6 +398,7 @@ void Manager::writeRestTextFile()
 {
     ofstream writeFile;
 
+    SetFileAttributes(_T("Restaurant.txt"), FILE_ATTRIBUTE_NORMAL);
     writeFile.open("Restaurant.txt", std::ofstream::out);
     //cout << "write Restaurant txt" << endl;
     string id_wfr;
@@ -423,14 +426,14 @@ void Manager::writeRestTextFile()
         }
     }
 
-
+    SetFileAttributes(_T("Restaurant.txt"), FILE_ATTRIBUTE_READONLY);
     writeFile.close();
 }
 void Manager::writeR_MenuTextFile()
 {
 
     ofstream writeFile;
-
+    SetFileAttributes(_T("Restaurant_Menu.txt"), FILE_ATTRIBUTE_NORMAL);
     writeFile.open("Restaurant_Menu.txt", std::ofstream::out);
     //cout << "write R_menu txt" << endl;
     string name;
@@ -458,13 +461,13 @@ void Manager::writeR_MenuTextFile()
         }
     }
 
-
+    SetFileAttributes(_T("Restaurant_Menu.txt"), FILE_ATTRIBUTE_READONLY);
     writeFile.close();
 }
 void Manager::writeR_InfoTextFile()
 {
     ofstream writeFile;
-
+    SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_NORMAL);
     writeFile.open("Restaurant_Info.txt", std::ofstream::out);
     //cout << "write R_Info txt" << endl;
     string name_info;
@@ -515,7 +518,7 @@ void Manager::writeR_InfoTextFile()
         }
     }
 
-
+    SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_READONLY);
     writeFile.close();
 
 }
@@ -675,7 +678,7 @@ void Manager::registerRestaurant()
                 for (int i = 0; i < user.size(); i++) {
                     for (int j = 0; j < user[i].restaurant.size(); j++) {
                         if (!strcmp(user[i].restaurant[j].name.c_str(), R_name.c_str())) {
-                            cout <<"중복된 정보입니다.\n" << endl;
+                            cout << "중복된 정보입니다.\n" << endl;
                             check = true;
                             break;
                         }
@@ -709,7 +712,7 @@ void Manager::registerRestaurant()
            // cout << "카테고리: " << category << "\n이름: " << R_name << "\n주소: " << R_address << endl;
             if (yesorno()) {//current_user의 레스토랑객체벡터에 레스토랑 만들어서 pushback
                 ofstream writeRestaurant;
-
+                SetFileAttributes(_T("Restaurant.txt"), FILE_ATTRIBUTE_NORMAL);
                 writeRestaurant.open("Restaurant.txt", std::ofstream::out | std::ofstream::app);//쓰기모드, 이어서 추가하기
                 if (writeRestaurant.is_open()) {
                     string merge = current_user->id + "/" + category + "/" + R_name + "/" + R_address + "\n";
@@ -718,6 +721,7 @@ void Manager::registerRestaurant()
                 else {
                     cout << "파일 오픈 오류\n" << endl;
                 }
+                SetFileAttributes(_T("Restaurant.txt"), FILE_ATTRIBUTE_READONLY);
                 writeRestaurant.close();
                 current_user->restaurant.push_back(Restaurant(category, R_name, R_address));
                 readRestTextFile();
@@ -727,7 +731,7 @@ void Manager::registerRestaurant()
                 return;
             }
             else {
-               // cout << "추가안해\n" << endl;
+                // cout << "추가안해\n" << endl;
                 continue;
             }
         }
@@ -794,7 +798,7 @@ void Manager::searchRestaurant()
                     cout << "잘못된 형식입니다.\n" << endl;
                     continue;
                 }
-               // cout << "time : " << time << "/day : " << day << "/adr : " << adr << endl;
+                // cout << "time : " << time << "/day : " << day << "/adr : " << adr << endl;
 
                 for (int i = 0; i < user.size(); i++) {
                     for (int j = 0; j < user[i].restaurant.size(); j++) {
@@ -1142,792 +1146,502 @@ void Manager::readR_MenuTextFile()
     }
 }
 
+string Manager::save_Openhour(int index, smatch match, string humoo)
+{
+    string ret_time = "";
+    string temp[4];
+    temp->clear();
+    for (int i = 0; i < 4; i++) {
+        temp[i] = match.str(i + 1);
+        if (match.str(i + 1).size() == 1) {
+            temp[i] = "0" + match.str(i + 1);
+        }
+    }
+    if (humoo == "-1") {
+        //휴무일 없음
+        if (stoi(match.str(1)) > stoi(match.str(3))) {
+            //자정 포함시간
+            current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+            current_user->restaurant.at(index).open_hour.push_back("23");
+            current_user->restaurant.at(index).open_hour.push_back("59");
+            current_user->restaurant.at(index).open_hour.push_back(to_string(-1));
+
+            current_user->restaurant.at(index).open_hour.push_back("00");
+            current_user->restaurant.at(index).open_hour.push_back("00");
+            current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+            current_user->restaurant.at(index).open_hour.push_back(to_string(-1));
+            ret_time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
+        }
+        else if (stoi(match.str(1)) == stoi(match.str(3))) {
+            if (stoi(match.str(2)) > stoi(match.str(4))) {
+                //자정 포함시간
+                current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+                current_user->restaurant.at(index).open_hour.push_back("23");
+                current_user->restaurant.at(index).open_hour.push_back("59");
+                current_user->restaurant.at(index).open_hour.push_back(to_string(-1));
+
+                current_user->restaurant.at(index).open_hour.push_back("00");
+                current_user->restaurant.at(index).open_hour.push_back("00");
+                current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+                current_user->restaurant.at(index).open_hour.push_back(to_string(-1));
+                ret_time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
+            }
+            else {
+                //자정 포함x 시간
+                current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+                current_user->restaurant.at(index).open_hour.push_back(to_string(-1));
+                ret_time = temp[0] + ":" + temp[1] + "~" + temp[2] + ":" + temp[3];
+            }
+        }
+        else {
+            //자정 포함 x 시간
+            current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+            current_user->restaurant.at(index).open_hour.push_back(to_string(-1));
+            ret_time = temp[0] + ":" + temp[1] + "~" + temp[2] + ":" + temp[3];
+        }
+    }
+    else {
+        //휴무일 있음
+        if (stoi(match.str(1)) > stoi(match.str(3))) {
+            //자정 포함
+            current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+            current_user->restaurant.at(index).open_hour.push_back("23");
+            current_user->restaurant.at(index).open_hour.push_back("59");
+            current_user->restaurant.at(index).open_hour.push_back(humoo);
+            current_user->restaurant.at(index).open_hour.push_back("00");
+            current_user->restaurant.at(index).open_hour.push_back("00");
+            current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+            current_user->restaurant.at(index).open_hour.push_back(to_string((stoi(humoo) + 1) % 7));
+            ret_time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
+        }
+        else if (stoi(match.str(1)) == stoi(match.str(3))) {
+            if (stoi(match.str(2)) > stoi(match.str(4))) {
+                //자정 포함
+                current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+                current_user->restaurant.at(index).open_hour.push_back("23");
+                current_user->restaurant.at(index).open_hour.push_back("59");
+                current_user->restaurant.at(index).open_hour.push_back(humoo);
+                current_user->restaurant.at(index).open_hour.push_back("00");
+                current_user->restaurant.at(index).open_hour.push_back("00");
+                current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+                current_user->restaurant.at(index).open_hour.push_back(to_string((stoi(humoo) + 1) % 7));
+                ret_time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
+            }
+            else {
+                //자정 포함 x
+                current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+                current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+                current_user->restaurant.at(index).open_hour.push_back(humoo);
+                ret_time = temp[0] + ":" + temp[1] + "~" + temp[2] + ":" + temp[3];
+            }
+        }
+        else {
+            //자정 포함x
+            current_user->restaurant.at(index).open_hour.push_back(temp[0]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[1]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[2]);
+            current_user->restaurant.at(index).open_hour.push_back(temp[3]);
+            current_user->restaurant.at(index).open_hour.push_back(humoo);
+            ret_time = temp[0] + ":" + temp[1] + "~" + temp[2] + ":" + temp[3];
+        }
+
+    }
+    return ret_time;
+}
+
 void Manager::ManageRestaurant()
 {
 
     while (true) {
         if (current_user->restaurant.empty()) {
-            cout << "등록된 식당이 없습니다 식당을 등록해 주세요" << endl;
+            cout << "\n등록된 식당이 없습니다 식당을 등록해 주세요" << endl;
             return;
         }
-        int select;
-        cout << "<<식당 리스트>>" << endl;
+        string str_select;
+        cout << "\n\n<<식당 리스트>>" << endl;
         current_user->printMyRest();
         cout << "보기선택 : ";
-        cin >> select;
-        cin.ignore();//버퍼 제거 
-        if (select == current_user->restaurant.size() + 1) return;
+        getline(cin, str_select);
+        regex manageSelect("^[1-9]+[0-9]?");
+        if (regex_match(str_select, manageSelect)) {
+            const char* buf_selc = str_select.c_str();
+            int select = atoi(buf_selc);
+            //cin.ignore('\n');//버퍼 제거 
+            if (select == 0) {
+                cout << "잘못된 형식입니다.\n" << endl;
+                continue;
 
-        if (select < current_user->restaurant.size() + 1 && select >= 1) {
-            if (!(current_user->restaurant.at(select - 1).menu.empty() || current_user->restaurant.at(select - 1).open_hour.empty())) {
-                while (true) {
-                    //full info
-                   // cin.ignore();
-                    cout << "부가정보 수정" << endl;
-                    cout << "1. 메뉴/가격 수정 \n2. 주소/시간/휴무일 수정 \n3. 이전메뉴" << endl;
-                    cout << "보기 선택: ";
-                    int select_menu2;
-                    cin >> select_menu2;
-                    if (isQuit(to_string(select_menu2))) continue;
-                    cin.ignore();//버퍼 제거
-                    if (select_menu2 == 3) break;
-                    if (select_menu2 < 3 && select_menu2 >= 1) {
-                        if (select_menu2 == 1)
-                        {
-                            //메뉴수정
-                            string M_name, M_price, temp;
-                            string input;
-                            regex M_name_Checker("[a-zA-Z\\s]*");
-                            //regex M_price_Checker("^[1-9]?(,|[0-9])[\\S]*");
-                            while (true) {
-                                // writeR_MenuTextFile();
-                                vector<Menu>::iterator iter = current_user->restaurant.at(select - 1).menu.begin();
-                                if (current_user->restaurant.at(select - 1).menu.size() == 3) {
-                                    cout << "메뉴를 더이상 추가할 수 없습니다." << endl;
-                                }
-                                current_user->restaurant.at(select - 1).print_menu();
-                                cout << "메뉴/(가격) 입력: ";
-                                getline(cin, input);
-                                if (!isin0to128(input)) {
-                                    cout << "한국어 입력 금지" << endl;
-                                    continue;
-                                }
-                                char* data_buff = new char[input.size() + 1];
-                                strcpy(data_buff, input.c_str());
-                                int scount = 0;
-                                for (int i = 0; i < input.size(); i++) {
-                                    if ((int)input[i] == 47)
-                                        scount++;
-                                }
-                                // cout << "scount : " << scount << endl;
-                                trim(input);//앞뒤공백은 자르기
+            }
+            if (select == current_user->restaurant.size() + 1) return;
 
-                                if (scount == 0 && !isQuit(input)) {
-                                    //메뉴만 입력됨 
-                                    M_name = input;
-                                    if (!oneSpaceLength(M_name)) { continue; }
-                                    for (int i = 0; i < M_name.size(); i++) {
-                                        M_name[i] = tolower(M_name[i]);
-                                    }
-                                    if (regex_match(M_name, M_name_Checker))
-                                    {
-                                        for (int i = 0; i < M_name.size(); i++) {
-                                            M_name[i] = tolower(M_name[i]);
-                                        }
-                                        bool del_menu = false;
-                                        for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size(); i++) {
-                                            if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
-                                                del_menu = true;
-                                                break;
-                                            }
-                                        }
-                                        if (del_menu) {
-                                            cout << "삭제할 메뉴: " << M_name << endl;
-                                            if (yesorno()) {
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        vector<Menu>::iterator iter2 = user.at(j).restaurant.at(select - 1).menu.begin();
-                                                        for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size() - 1; i++) {
-                                                            if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
-                                                                user.at(j).restaurant.at(select - 1).menu.erase(iter2 + i);
-                                                                current_user->restaurant.at(select - 1).menu.erase(iter + i);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                writeR_MenuTextFile();
-
-                                                cout << "삭제 완료" << endl;
-                                                continue;
-                                            }
-                                            else {
-                                                continue;
-                                            }
-                                        }
-                                        else {
-                                            cout << "잘못된 형식입니다." << endl;
-                                        }
-                                    }
-
-                                }
-                                if (!isQuit(input)) {
-                                    vector<char*>stv;
-                                    char* ptr1 = strtok(data_buff, "/");
-                                    while (ptr1 != nullptr) {
-                                        stv.push_back(ptr1);
-                                        ptr1 = strtok(NULL, "/");
-                                    }
-                                    if (stv.size() == 2) {
-                                        M_name = (string)stv[0];
-                                        M_price = (string)stv[1];
-                                    }
-                                    else {
-                                        if (M_price.empty())
-                                            cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                    trim(M_name);
-                                    trim(M_price);
-
-                                    if (regex_match(M_name, M_name_Checker))
-                                    {
-                                        if (!oneSpaceLength(M_name)) { continue; }
-                                        for (int i = 0; i < M_name.size(); i++) {
-                                            M_name[i] = tolower(M_name[i]);
-                                        }
-                                        if (!isMoney(M_price)) {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-                                        bool add = true;
-                                        for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size(); i++) {
-                                            if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
-                                                add = false;
-                                                break;
-                                            }
-                                        }
-                                        if (M_price.find(",") != -1) {
-                                            while (M_price.find(",") != -1)
-                                                M_price.replace(M_price.find(","), 1, "");
-                                        }
-                                        if (add) {
-                                            if (current_user->restaurant.at(select - 1).menu.size() == 3) {
-                                                cout << "더이상 추가할 수 없습니다(최대 메뉴 3개)" << endl;
-                                                continue;
-                                            }
-                                            cout << "추가할 메뉴이름: " << M_name << endl;
-                                            cout << "추가할 메뉴가격: " << M_price << endl;
-                                            if (yesorno()) {
-
-                                                current_user->restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id)
-                                                        user.at(j).restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
-                                                }
-                                                writeR_MenuTextFile();
-                                                cout << "추가 완료!" << endl;
-                                                continue;
-                                            }
-                                            else {
-                                                continue;
-                                            }
-
-                                        }
-                                        cout << "메뉴이름: " << M_name << endl;
-                                        cout << "수정된 메뉴가격: " << M_price << endl;
-                                        if (yesorno()) {
-
-                                            for (int j = 0; j < user.size(); j++) {
-                                                if (user.at(j).id == current_user->id) {
-                                                    for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size(); i++) {
-                                                        if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
-                                                            user.at(j).restaurant.at(select - 1).menu.at(i).m_price = M_price;
-                                                            current_user->restaurant.at(select - 1).menu.at(i).m_price = M_price;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            writeR_MenuTextFile();
-                                            cout << "수정 완료!" << endl;
-                                        }
-                                        else {
-                                            continue;
-                                        }
-                                    }
-                                    else if (regex_match(M_price, M_name_Checker))
-                                    {
-                                        temp = M_price;
-                                        M_price = M_name;
-                                        M_name = temp;
-                                        if (!oneSpaceLength(M_name)) { continue; }
-                                        for (int i = 0; i < M_name.size(); i++) {
-                                            M_name[i] = tolower(M_name[i]);
-                                        }
-                                        if (!isMoney(M_price)) {
-                                            cout << "가격 형식 확인" << endl;
-                                            continue;
-                                        }
-                                        if (M_price.find(",") != -1) {
-                                            while (M_price.find(",") != -1)
-                                                M_price.replace(M_price.find(","), 1, "");
-                                        }
-                                        cout << "메뉴이름: " << M_name << endl;
-                                        cout << "수정된 메뉴가격: " << M_price << endl;
-                                        if (yesorno()) {
-                                            for (int j = 0; j < user.size(); j++) {
-                                                if (user.at(j).id == current_user->id) {
-                                                    for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size() - 1; i++) {
-                                                        if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
-                                                            user.at(j).restaurant.at(select - 1).menu.at(i).m_price = M_price;
-                                                            current_user->restaurant.at(select - 1).menu.at(i).m_price = M_price;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            writeR_MenuTextFile();
-                                            cout << "수정완료!" << endl;
-                                            continue;
-                                        }
-                                        else {
-                                            continue;
-                                        }
-                                    }
-                                    else {//둘다 정규식 안맞음->재입력
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
+            if (select < current_user->restaurant.size() + 1 && select >= 1) {
+                if (!(current_user->restaurant.at(select - 1).menu.empty() || current_user->restaurant.at(select - 1).open_hour.empty())) {
+                    while (true) {
+                        //full info
+                        //cin.clear();
+                       // cin.ignore();
+                        cout << "\n\n부가정보 수정" << endl;
+                        cout << "1. 메뉴/가격 수정 \n2. 주소/시간/휴무일 수정 \n3. 이전메뉴" << endl;
+                        cout << "보기 선택: ";
+                        string select_menu2;
+                        getline(cin, select_menu2);
+                        if (!isin0to128(select_menu2)) {
+                            cout << "한국어 입력 금지\n" << endl;
                             continue;
                         }
-                        else if (select_menu2 == 2)
-                        {//정보 수정
+                        regex menuCheck("^([1-3]){1}$");
+                        if (regex_match(select_menu2, menuCheck)) {
+                            const char* buff = select_menu2.c_str();
+                            int menu2 = atoi(buff);
+                            if (menu2 == 3) break;
+                            else if (menu2 < 3 && menu2 >= 1) {
+                                if (menu2 == 1)
+                                {
+                                    //메뉴수정
+                                    string M_name, M_price, temp;
+                                    string input;
+                                    regex M_name_Checker("[a-zA-Z\\s]*");
+                                    //regex M_price_Checker("^[1-9]?(,|[0-9])[\\S]*");
+                                    while (true) {
+                                        // writeR_MenuTextFile();
+                                        vector<Menu>::iterator iter = current_user->restaurant.at(select - 1).menu.begin();
+                                        if (current_user->restaurant.at(select - 1).menu.size() == 3) {
+                                            cout << "\n메뉴를 더이상 추가할 수 없습니다.\n" << endl;
+                                        }
+                                        current_user->restaurant.at(select - 1).print_menu();
+                                        cout << "\n메뉴/(가격) 입력: ";
+                                        getline(cin, input);
 
-                            string hour, close_day, temp;
-                            string input;
-                            regex Time_Checker("([0-9]{1,2})\:([0-9]{1,2})\~([0-9]{1,2})\:([0-9]{1,2})*$");
-                            regex Day_Checker("^[a-zA-Z]+(DAY|DAy|DaY|Day|day|daY|dAY|dAy)$");
-                            regex adrChecker("[a-zA-Z0-9]+");//알파벳+숫자만입력
-                            while (true) {
-                                current_user->restaurant.at(select - 1).print_info2();
-                                cout << "주소/시간/휴무정보: ";
-                                getline(cin, input);
-                                if (!isin0to128(input)) {
-                                    cout << "한국어 입력 금지" << endl;
-                                    continue;
-                                }
-                                char* data_buff = new char[input.size() + 1];
-                                strcpy(data_buff, input.c_str());
-                                //trim(input);//앞뒤공백은 자르기
-                                int scount = 0;
-                                for (int i = 0; i < input.size(); i++) {
-                                    if ((int)input[i] == 47)
-                                        scount++;
-                                }
-                                // cout << "scount : " << scount << endl;
-                                trim(input);
-                                if (isQuit(input)) break;
-
-                                if (scount == 0)
-                                {//셋중 하나의 정보
-                                    //휴무일 이라면 삭제 or 수정
-                                    //시간 이라면 수정
-                                    //주소 라면 수정
-                                    smatch match_one;
-                                    if (regex_match(input, Day_Checker))
-                                    {//휴무
+                                        if (isQuit(input)) break;
+                                        if (!isin0to128(input)) {
+                                            cout << "한국어 입력 금지\n" << endl;
+                                            continue;
+                                        }
+                                        char* data_buff = new char[input.size() + 1];
+                                        strcpy(data_buff, input.c_str());
+                                        int scount = 0;
                                         for (int i = 0; i < input.size(); i++) {
-                                            input[i] = tolower(input[i]);
+                                            if ((int)input[i] == 47)
+                                                scount++;
                                         }
-                                        int k = 0;
-                                        if (current_user->restaurant.at(select - 1).close_day.at(0) == input) {
-                                            cout << "휴무일 " << input << " 삭제" << endl;
-                                            if (yesorno()) {
-                                                current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                    }
-                                                }
-                                                writeR_InfoTextFile();
-                                                cout << "삭제 완료" << endl;
-                                            }
-                                            else continue;
-                                        }
-                                        else {
-                                            cout << "휴무일 " << input << " 수정" << endl;
-                                            if (yesorno()) {
-                                                current_user->restaurant.at(select - 1).close_day.at(0) = input;
-                                                for (k = 0; k < 7; k++) {
-                                                    if (humooil[k] == input) {
-                                                        current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
-                                                        cout << input << " " << k;
+                                        // cout << "scount : " << scount << endl;
+                                        trim(input);//앞뒤공백은 자르기
 
+                                        if (scount == 0 && !isQuit(input)) {
+                                            //메뉴만 입력됨 
+                                            M_name = input;
+                                            if (!oneSpaceLength(M_name)) { continue; }
+                                            for (int i = 0; i < M_name.size(); i++) {
+                                                M_name[i] = tolower(M_name[i]);
+                                            }
+                                            if (regex_match(M_name, M_name_Checker))
+                                            {
+                                                for (int i = 0; i < M_name.size(); i++) {
+                                                    M_name[i] = tolower(M_name[i]);
+                                                }
+                                                bool del_menu = false;
+                                                for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size(); i++) {
+                                                    if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
+                                                        del_menu = true;
                                                         break;
                                                     }
                                                 }
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = input;
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                if (del_menu) {
+                                                    cout << "삭제할 메뉴: " << M_name << endl;
+                                                    if (yesorno()) {
+                                                        if (current_user->restaurant.at(select - 1).menu.size() == 1) {
+                                                            current_user->restaurant.at(select - 1).menu.clear();
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).menu.clear();
+                                                                }
+                                                            }
+                                                            writeR_MenuTextFile();
+                                                            continue;
+                                                        }
+                                                        for (int j = 0; j < user.size(); j++) {
+                                                            if (user.at(j).id == current_user->id) {
+                                                                vector<Menu>::iterator iter2 = user.at(j).restaurant.at(select - 1).menu.begin();
+                                                                for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size() - 1; i++) {
+                                                                    if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
+                                                                        user.at(j).restaurant.at(select - 1).menu.erase(iter2 + i);
+                                                                        current_user->restaurant.at(select - 1).menu.erase(iter + i);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        writeR_MenuTextFile();
+
+                                                        cout << "삭제 완료\n" << endl;
+                                                        continue;
+                                                    }
+                                                    else {
+                                                        continue;
                                                     }
                                                 }
-                                                writeR_InfoTextFile();
-                                                cout << "수정 완료" << endl;
-                                            }
-                                            else continue;
-                                        }
-                                    }
-                                    else if (regex_match(input, match_one, Time_Checker))
-                                    {//시간
-                                        string humoo = current_user->restaurant.at(select - 1).open_hour.at(4);
-                                        current_user->restaurant.at(select - 1).open_hour.clear();
-
-                                        if (stoi(match_one.str(1)) == stoi(match_one.str(3)) && stoi(match_one.str(2)) == stoi(match_one.str(4)))
-                                        {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-
-                                        if (!(stoi(match_one.str(1)) < 24 && stoi(match_one.str(3)) < 24 && stoi(match_one.str(2)) < 60 && stoi(match_one.str(4)) < 60))
-                                        {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-                                        cout << "영업시간 " << input << " 수정" << endl;
-                                        if (yesorno()) {
-                                            string temp[4];
-                                            temp->clear();
-                                            for (int i = 0; i < 4; i++) {
-                                                temp[i] = match_one.str(i + 1);
-                                                if (match_one.str(i + 1).size() == 1) {
-                                                    temp[i] = "0" + match_one.str(i + 1);
+                                                else {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
                                                 }
                                             }
-                                            if (stoi(match_one.str(1)) >= stoi(match_one.str(3)) && stoi(match_one.str(2)) >= stoi(match_one.str(4))) {
-                                                //앞시간이 뒷시간 보다 크면나누어 저장
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(humoo);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(to_string((stoi(humoo) + 1) % 7));
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                    }
-                                                }
+
+                                        }
+                                        if (!isQuit(input) && scount == 1) {
+                                            vector<char*>stv;
+                                            char* ptr1 = strtok(data_buff, "/");
+                                            while (ptr1 != nullptr) {
+                                                stv.push_back(ptr1);
+                                                ptr1 = strtok(NULL, "/");
+                                            }
+                                            if (stv.size() == 2) {
+                                                M_name = (string)stv[0];
+                                                M_price = (string)stv[1];
                                             }
                                             else {
-                                                //자정을 포함하지 않는 시간
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(humoo);
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
+                                                if (M_price.empty())
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                            trim(M_name);
+                                            trim(M_price);
+
+                                            if (regex_match(M_name, M_name_Checker))
+                                            {
+                                                if (!oneSpaceLength(M_name)) { continue; }
+                                                for (int i = 0; i < M_name.size(); i++) {
+                                                    M_name[i] = tolower(M_name[i]);
+                                                }
+                                                if (!isMoney(M_price)) {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
+                                                }
+                                                bool add = true;
+                                                for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size(); i++) {
+                                                    if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
+                                                        add = false;
+                                                        break;
                                                     }
                                                 }
-                                            }
-                                            writeR_InfoTextFile();
-                                            cout << "수정 완료" << endl;
-                                        }
-                                        else {
-                                            continue;
-                                        }
-                                    }
-                                    else
-                                    {//주소
-                                        bool check = false;
-                                        for (int i = 0; i < 10; i++) {//주소검사
-                                            if (strcmp(input.c_str(), V_address[i].c_str()) == 0) {
-                                                check = true;
-                                                break;
-                                            }
-                                            else {
-                                                check = false;
-                                            }
-                                        }
-                                        if (!(check)) {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-                                        else {
-                                            cout << "주소 " << input << " 수정" << endl;
-                                            if (yesorno()) {
-                                                current_user->restaurant.at(select - 1).address = input;
-                                                cout << input << endl;
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).address = input;
-                                                    }
+                                                if (M_price.find(",") != -1) {
+                                                    while (M_price.find(",") != -1)
+                                                        M_price.replace(M_price.find(","), 1, "");
                                                 }
-                                                writeR_InfoTextFile();
-                                                writeRestTextFile();
-                                                cout << "수정 완료" << endl;
+                                                if (add) {
+                                                    if (current_user->restaurant.at(select - 1).menu.size() == 3) {
+                                                        cout << "더이상 추가할 수 없습니다(최대 메뉴 3개)\n" << endl;
+                                                        continue;
+                                                    }
+                                                    cout << "추가할 메뉴이름: " << M_name << endl;
+                                                    cout << "추가할 메뉴가격: " << M_price << endl;
+                                                    if (yesorno()) {
+
+                                                        current_user->restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
+                                                        for (int j = 0; j < user.size(); j++) {
+                                                            if (user.at(j).id == current_user->id)
+                                                                user.at(j).restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
+                                                        }
+                                                        writeR_MenuTextFile();
+                                                        cout << "추가 완료!\n" << endl;
+                                                        continue;
+                                                    }
+                                                    else {
+                                                        continue;
+                                                    }
+
+                                                }
+                                                cout << "메뉴이름: " << M_name << endl;
+                                                cout << "수정된 메뉴가격: " << M_price << endl;
+                                                if (yesorno()) {
+
+                                                    for (int j = 0; j < user.size(); j++) {
+                                                        if (user.at(j).id == current_user->id) {
+                                                            for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size(); i++) {
+                                                                if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
+                                                                    user.at(j).restaurant.at(select - 1).menu.at(i).m_price = M_price;
+                                                                    current_user->restaurant.at(select - 1).menu.at(i).m_price = M_price;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    writeR_MenuTextFile();
+                                                    cout << "수정 완료!\n" << endl;
+                                                }
+                                                else {
+                                                    continue;
+                                                }
                                             }
-                                            else continue;
+                                            else if (regex_match(M_price, M_name_Checker))
+                                            {
+                                                temp = M_price;
+                                                M_price = M_name;
+                                                M_name = temp;
+                                                if (!oneSpaceLength(M_name)) { continue; }
+                                                for (int i = 0; i < M_name.size(); i++) {
+                                                    M_name[i] = tolower(M_name[i]);
+                                                }
+                                                if (!isMoney(M_price)) {
+                                                    cout << "가격 형식 확인\n" << endl;
+                                                    continue;
+                                                }
+                                                if (M_price.find(",") != -1) {
+                                                    while (M_price.find(",") != -1)
+                                                        M_price.replace(M_price.find(","), 1, "");
+                                                }
+                                                cout << "메뉴이름: " << M_name << endl;
+                                                cout << "수정된 메뉴가격: " << M_price << endl;
+                                                if (yesorno()) {
+                                                    for (int j = 0; j < user.size(); j++) {
+                                                        if (user.at(j).id == current_user->id) {
+                                                            for (int i = 0; i < current_user->restaurant.at(select - 1).menu.size() - 1; i++) {
+                                                                if (current_user->restaurant.at(select - 1).menu.at(i).m_name == M_name) {
+                                                                    user.at(j).restaurant.at(select - 1).menu.at(i).m_price = M_price;
+                                                                    current_user->restaurant.at(select - 1).menu.at(i).m_price = M_price;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    writeR_MenuTextFile();
+                                                    cout << "수정완료!\n" << endl;
+                                                    continue;
+                                                }
+                                                else {
+                                                    continue;
+                                                }
+                                            }
+                                            else {//둘다 정규식 안맞음->재입력
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            cout << "잘못된 형식입니다.\n" << endl;
+                                            continue;
                                         }
                                     }
                                     continue;
                                 }
-                                else if (scount == 1)
-                                {//셋중 두개의 정보
-                                    string str1, str2;
-                                    smatch match2_1, match2_2;
-                                    vector<char*>stv;
-                                    char* ptr1 = strtok(data_buff, "/");
-                                    while (ptr1 != nullptr) {
-                                        stv.push_back(ptr1);
-                                        ptr1 = strtok(NULL, "/");
-                                    }
-                                    if (stv.size() == 2) {
-                                        str1 = (string)stv[0];
-                                        str2 = (string)stv[1];
-                                        trim(str1);
-                                        trim(str2);
-                                    }
-                                    else {
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                    cout << str1 << "/" << str2 << endl;
+                                else if (menu2 == 2)
+                                {//정보 수정
 
-                                    if (regex_match(str1, Day_Checker))
-                                    { //첫문자열이 시간
-                                        for (int i = 0; i < str1.size(); i++) {
-                                            str1[i] = tolower(str1[i]);
+                                    string hour, close_day, temp;
+                                    string input;
+                                    regex Time_Checker("([0-9]{1,2})\:([0-9]{1,2})\~([0-9]{1,2})\:([0-9]{1,2})*$");
+                                    regex Day_Checker("^[a-zA-Z]+(DAY|DAy|DaY|Day|day|daY|dAY|dAy)$");
+                                    regex adrChecker("[a-zA-Z0-9]+");//알파벳+숫자만입력
+                                    while (true) {
+                                        current_user->restaurant.at(select - 1).print_info2();
+                                        cout << "\n\n주소/시간/휴무정보: ";
+                                        getline(cin, input);
+                                        if (!isin0to128(input)) {
+                                            cout << "한국어 입력 금지\n" << endl;
+                                            continue;
                                         }
-                                        int k = 0;
-                                        if (current_user->restaurant.at(select - 1).close_day.at(0) == str1) {
-                                            //휴무삭제
-                                                //시간 주소 판별
-                                            if (regex_match(str2, match2_2, Time_Checker))
-                                            {//시간
+                                        char* data_buff = new char[input.size() + 1];
+                                        strcpy(data_buff, input.c_str());
+                                        //trim(input);//앞뒤공백은 자르기
+                                        int scount = 0;
+                                        for (int i = 0; i < input.size(); i++) {
+                                            if ((int)input[i] == 47)
+                                                scount++;
+                                        }
+                                        // cout << "scount : " << scount << endl;
+                                        trim(input);
+                                        if (isQuit(input)) break;
 
-                                                current_user->restaurant.at(select - 1).open_hour.clear();
-                                                if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
-                                                {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
+                                        if (scount == 0)
+                                        {//셋중 하나의 정보
+                                            //휴무일 이라면 삭제 or 수정
+                                            //시간 이라면 수정
+                                            //주소 라면 수정
+                                            smatch match_one;
+                                            if (regex_match(input, Day_Checker))
+                                            {//휴무
+                                                for (int i = 0; i < input.size(); i++) {
+                                                    input[i] = tolower(input[i]);
                                                 }
-
-                                                if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
-                                                {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
-                                                }
-                                                cout << "휴무일 " << str1 << " 삭제" << endl;
-                                                cout << "영업시간: " << str2 << " 수정" << endl;
-                                                if (yesorno()) {
-                                                    string temp[4];
-                                                    temp->clear();
-                                                    for (int i = 0; i < 4; i++) {
-                                                        temp[i] = match2_2.str(i + 1);
-                                                        if (match2_2.str(i + 1).size() == 1) {
-                                                            temp[i] = "0" + match2_2.str(i + 1);
-                                                        }
-                                                    }
-                                                    current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                    current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                    for (int j = 0; j < user.size(); j++) {
-                                                        if (user.at(j).id == current_user->id) {
-                                                            user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                            user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                        }
-                                                    }
-                                                    string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                    string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                    if (stoi(match2_2.str(1)) >= stoi(match2_2.str(3)) && stoi(match2_2.str(2)) >= stoi(match2_2.str(4))) {
-                                                        //앞시간이 뒷시간 보다 크면나누어 저장
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
-                                                        }
-
-                                                    }
-                                                    else {
-                                                        //자정을 포함하지 않는 시간
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
-                                                        }
-                                                    }
-                                                    writeR_InfoTextFile();
-                                                    cout << "수정 완료" << endl;
-                                                    break;
-                                                }
-                                                else {
-                                                    continue;
-                                                }
-                                            }
-                                            else
-                                            {//주소
-                                                bool check = false;
-                                                for (int i = 0; i < 10; i++) {//주소검사
-                                                    if (strcmp(str2.c_str(), V_address[i].c_str()) == 0) {
-                                                        check = true;
-                                                        break;
-                                                    }
-                                                    else {
-                                                        check = false;
-                                                    }
-                                                }
-                                                if (!(check)) {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
-                                                }
-                                                else {
-                                                    cout << "휴무일 " << str1 << " 삭제" << endl;
-                                                    cout << "주소 " << str2 << " 수정" << endl;
+                                                int k = 0;
+                                                if (current_user->restaurant.at(select - 1).close_day.at(0) == input) {
+                                                    cout << "휴무일 " << input << " 삭제" << endl;
                                                     if (yesorno()) {
                                                         current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
                                                         current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                        current_user->restaurant.at(select - 1).address = str2;
                                                         for (int j = 0; j < user.size(); j++) {
                                                             if (user.at(j).id == current_user->id) {
                                                                 user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
                                                                 user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
                                                             }
                                                         }
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).address = str2;
-                                                            }
-                                                        }
                                                         writeR_InfoTextFile();
-                                                        writeRestTextFile();
-                                                        cout << "수정 완료" << endl;
+                                                        cout << "삭제 완료\n" << endl;
                                                     }
                                                     else continue;
                                                 }
-                                            }
-
-                                        }
-                                        else {
-                                            //휴무변경
-
-                                                //시간 주소 판별 
-                                            if (regex_match(str2, match2_2, Time_Checker))
-                                            {//시간
-                                                current_user->restaurant.at(select - 1).open_hour.clear();
-                                                if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
-                                                {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
-                                                }
-
-                                                if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
-                                                {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
-                                                }
-                                                cout << "휴무일 " << str1 << " 수정" << endl;
-                                                cout << "영업시간: " << str2 << " 수정" << endl;
-                                                if (yesorno()) {
-                                                    string temp[4];
-                                                    temp->clear();
-                                                    for (int i = 0; i < 4; i++) {
-                                                        temp[i] = match2_2.str(i + 1);
-                                                        if (match2_2.str(i + 1).size() == 1) {
-                                                            temp[i] = "0" + match2_2.str(i + 1);
-                                                        }
-                                                    }
-                                                    current_user->restaurant.at(select - 1).close_day.at(0) = str1;
-                                                    for (k = 0; k < 7; k++) {
-                                                        if (humooil[k] == str1) {
-                                                            current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
-                                                            break;
-                                                        }
-                                                    }
-                                                    for (int j = 0; j < user.size(); j++) {
-                                                        if (user.at(j).id == current_user->id) {
-                                                            user.at(j).restaurant.at(select - 1).close_day.at(0) = str1;
-                                                            user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
-                                                        }
-                                                    }
-
-                                                    string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                    string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                    if (stoi(match2_2.str(1)) >= stoi(match2_2.str(3)) && stoi(match2_2.str(2)) >= stoi(match2_2.str(4))) {
-                                                        //앞시간이 뒷시간 보다 크면나누어 저장
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(to_string((stoi(index) + 1) % 7));
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
-                                                        }
-                                                    }
-                                                    else {
-                                                        //자정을 포함하지 않는 시간
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
-                                                        }
-                                                    }
-                                                    writeR_InfoTextFile();
-                                                    cout << "수정 완료" << endl;
-                                                    continue;
-                                                }
                                                 else {
-                                                    continue;
-                                                }
-                                            }
-                                            else
-                                            {//주소
-                                                bool check = false;
-                                                for (int i = 0; i < 10; i++) {//주소검사
-                                                    if (strcmp(str2.c_str(), V_address[i].c_str()) == 0) {
-                                                        check = true;
-                                                        break;
-                                                    }
-                                                    else {
-                                                        check = false;
-                                                    }
-                                                }
-                                                if (!(check)) {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
-                                                }
-                                                else {
-                                                    cout << "휴무일 " << str1 << " 수정" << endl;
-                                                    cout << "주소 " << str2 << " 수정" << endl;
+                                                    cout << "휴무일 " << input << " 수정" << endl;
                                                     if (yesorno()) {
-                                                        current_user->restaurant.at(select - 1).close_day.at(0) = str1;
+                                                        current_user->restaurant.at(select - 1).close_day.at(0) = input;
                                                         for (k = 0; k < 7; k++) {
-                                                            if (humooil[k] == str1) {
+                                                            if (humooil[k] == input) {
                                                                 current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                cout << input << " " << k;
+
                                                                 break;
                                                             }
                                                         }
                                                         for (int j = 0; j < user.size(); j++) {
                                                             if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).close_day.at(0) = str1;
+                                                                user.at(j).restaurant.at(select - 1).close_day.at(0) = input;
                                                                 user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
                                                             }
                                                         }
-                                                        current_user->restaurant.at(select - 1).address = str2;
-
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).address = str2;
-                                                            }
-                                                        }
                                                         writeR_InfoTextFile();
-                                                        writeRestTextFile();
-                                                        cout << "수정 완료" << endl;
+                                                        cout << "수정 완료\n" << endl;
                                                     }
                                                     else continue;
                                                 }
                                             }
-
-                                        }
-                                    }
-                                    else if (regex_match(str2, Day_Checker))
-                                    {//두번째 문자열이 시간
-                                        for (int i = 0; i < str2.size(); i++) {
-                                            str2[i] = tolower(str2[i]);
-                                        }
-                                        int k = 0;
-                                        if (current_user->restaurant.at(select - 1).close_day.at(0) == str2) {
-                                            //휴무삭제
-                                                //시간 주소 판별
-                                            if (regex_match(str1, match2_2, Time_Checker))
+                                            else if (regex_match(input, match_one, Time_Checker))
                                             {//시간
+                                                //string humoo = current_user->restaurant.at(select - 1).open_hour.at(4);
 
-                                                current_user->restaurant.at(select - 1).open_hour.clear();
-                                                if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
+                                                if (stoi(match_one.str(1)) == stoi(match_one.str(3)) && stoi(match_one.str(2)) == stoi(match_one.str(4)))
                                                 {
-                                                    cout << "잘못된 형식입니다." << endl;
+                                                    cout << "잘못된 형식입니다.\n" << endl;
                                                     continue;
                                                 }
 
-                                                if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
+                                                if (!(stoi(match_one.str(1)) < 24 && stoi(match_one.str(3)) < 24 && stoi(match_one.str(2)) < 60 && stoi(match_one.str(4)) < 60))
                                                 {
-                                                    cout << "잘못된 형식입니다." << endl;
+                                                    cout << "잘못된 형식입니다.\n" << endl;
                                                     continue;
                                                 }
-                                                cout << "휴무일 " << str2 << " 삭제" << endl;
-                                                cout << "영업시간: " << str1 << " 수정" << endl;
+                                                cout << "영업시간 " << input << " 수정" << endl;
                                                 if (yesorno()) {
-                                                    string temp[4];
-                                                    temp->clear();
-                                                    for (int i = 0; i < 4; i++) {
-                                                        temp[i] = match2_2.str(i + 1);
-                                                        if (match2_2.str(i + 1).size() == 1) {
-                                                            temp[i] = "0" + match2_2.str(i + 1);
-                                                        }
-                                                    }
-                                                    current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                    current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                    current_user->restaurant.at(select - 1).open_hour.clear();
+                                                    save_Openhour(select - 1, match_one, current_user->restaurant.at(select - 1).close_day.at(1));
                                                     for (int j = 0; j < user.size(); j++) {
                                                         if (user.at(j).id == current_user->id) {
-                                                            user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                            user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                        }
-                                                    }
-                                                    string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                    string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                    if (stoi(match2_2.str(1)) >= stoi(match2_2.str(3)) && stoi(match2_2.str(2)) >= stoi(match2_2.str(4))) {
-                                                        //앞시간이 뒷시간 보다 크면나누어 저장
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
-                                                        }
-                                                    }
-                                                    else {
-                                                        //자정을 포함하지 않는 시간
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
+                                                            user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
                                                         }
                                                     }
                                                     writeR_InfoTextFile();
-                                                    cout << "수정 완료" << endl;
-                                                    break;
+                                                    cout << "수정 완료\n" << endl;
                                                 }
                                                 else {
                                                     continue;
@@ -1937,7 +1651,7 @@ void Manager::ManageRestaurant()
                                             {//주소
                                                 bool check = false;
                                                 for (int i = 0; i < 10; i++) {//주소검사
-                                                    if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
+                                                    if (strcmp(input.c_str(), V_address[i].c_str()) == 0) {
                                                         check = true;
                                                         break;
                                                     }
@@ -1946,1211 +1660,1189 @@ void Manager::ManageRestaurant()
                                                     }
                                                 }
                                                 if (!(check)) {
-                                                    cout << "잘못된 형식입니다." << endl;
+                                                    cout << "잘못된 형식입니다.\n" << endl;
                                                     continue;
                                                 }
                                                 else {
-                                                    cout << "휴무일 " << str2 << " 삭제" << endl;
-                                                    cout << "주소 " << str1 << " 수정" << endl;
+                                                    cout << "주소 " << input << " 수정" << endl;
                                                     if (yesorno()) {
+                                                        current_user->restaurant.at(select - 1).address = input;
+                                                        cout << input << endl;
+                                                        for (int j = 0; j < user.size(); j++) {
+                                                            if (user.at(j).id == current_user->id) {
+                                                                user.at(j).restaurant.at(select - 1).address = input;
+                                                            }
+                                                        }
+                                                        writeR_InfoTextFile();
+                                                        writeRestTextFile();
+                                                        cout << "수정 완료\n" << endl;
+                                                    }
+                                                    else continue;
+                                                }
+                                            }
+                                            continue;
+                                        }
+                                        else if (scount == 1)
+                                        {//셋중 두개의 정보
+                                            string str1, str2;
+                                            smatch match2_1, match2_2;
+                                            vector<char*>stv;
+                                            char* ptr1 = strtok(data_buff, "/");
+                                            while (ptr1 != nullptr) {
+                                                stv.push_back(ptr1);
+                                                ptr1 = strtok(NULL, "/");
+                                            }
+                                            if (stv.size() == 2) {
+                                                str1 = (string)stv[0];
+                                                str2 = (string)stv[1];
+                                                trim(str1);
+                                                trim(str2);
+                                            }
+                                            else {
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                            cout << str1 << "/" << str2 << endl;
+
+                                            if (regex_match(str1, Day_Checker))
+                                            { //첫문자열이 시간
+                                                for (int i = 0; i < str1.size(); i++) {
+                                                    str1[i] = tolower(str1[i]);
+                                                }
+                                                int k = 0;
+                                                if (current_user->restaurant.at(select - 1).close_day.at(0) == str1) {
+                                                    //휴무삭제
+                                                        //시간 주소 판별
+                                                    if (regex_match(str2, match2_2, Time_Checker))
+                                                    {//시간
+
+
+                                                        if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+
+                                                        if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        cout << "휴무일 " << str1 << " 삭제" << endl;
+                                                        cout << "영업시간: " << str2 << " 수정" << endl;
+                                                        if (yesorno()) {
+                                                            current_user->restaurant.at(select - 1).open_hour.clear();
+                                                            current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                            current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                                    user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                                }
+                                                            }
+                                                            save_Openhour(select - 1, match2_2, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
+                                                                }
+                                                            }
+                                                            writeR_InfoTextFile();
+                                                            cout << "수정 완료\n" << endl;
+                                                            break;
+                                                        }
+                                                        else {
+                                                            continue;
+                                                        }
+                                                    }
+                                                    else
+                                                    {//주소
+                                                        bool check = false;
+                                                        for (int i = 0; i < 10; i++) {//주소검사
+                                                            if (strcmp(str2.c_str(), V_address[i].c_str()) == 0) {
+                                                                check = true;
+                                                                break;
+                                                            }
+                                                            else {
+                                                                check = false;
+                                                            }
+                                                        }
+                                                        if (!(check)) {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        else {
+                                                            cout << "휴무일 " << str1 << " 삭제" << endl;
+                                                            cout << "주소 " << str2 << " 수정" << endl;
+                                                            if (yesorno()) {
+                                                                current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                                current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                                current_user->restaurant.at(select - 1).address = str2;
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                                    }
+                                                                }
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).address = str2;
+                                                                    }
+                                                                }
+                                                                writeR_InfoTextFile();
+                                                                writeRestTextFile();
+                                                                cout << "수정 완료\n" << endl;
+                                                            }
+                                                            else continue;
+                                                        }
+                                                    }
+
+                                                }
+                                                else {
+                                                    //휴무변경
+
+                                                        //시간 주소 판별 
+                                                    if (regex_match(str2, match2_2, Time_Checker))
+                                                    {//시간
+
+                                                        if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+
+                                                        if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        cout << "휴무일 " << str1 << " 수정" << endl;
+                                                        cout << "영업시간: " << str2 << " 수정" << endl;
+                                                        if (yesorno()) {
+                                                            current_user->restaurant.at(select - 1).open_hour.clear();
+                                                            current_user->restaurant.at(select - 1).close_day.at(0) = str1;
+                                                            for (k = 0; k < 7; k++) {
+                                                                if (humooil[k] == str1) {
+                                                                    current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                    break;
+                                                                }
+                                                            }
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).close_day.at(0) = str1;
+                                                                    user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                }
+                                                            }
+                                                            save_Openhour(select - 1, match2_2, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
+                                                                }
+                                                            }
+                                                            writeR_InfoTextFile();
+                                                            cout << "수정 완료\n" << endl;
+                                                            continue;
+                                                        }
+                                                        else {
+                                                            continue;
+                                                        }
+                                                    }
+                                                    else
+                                                    {//주소
+                                                        bool check = false;
+                                                        for (int i = 0; i < 10; i++) {//주소검사
+                                                            if (strcmp(str2.c_str(), V_address[i].c_str()) == 0) {
+                                                                check = true;
+                                                                break;
+                                                            }
+                                                            else {
+                                                                check = false;
+                                                            }
+                                                        }
+                                                        if (!(check)) {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        else {
+                                                            cout << "휴무일 " << str1 << " 수정" << endl;
+                                                            cout << "주소 " << str2 << " 수정" << endl;
+                                                            if (yesorno()) {
+                                                                current_user->restaurant.at(select - 1).close_day.at(0) = str1;
+                                                                for (k = 0; k < 7; k++) {
+                                                                    if (humooil[k] == str1) {
+                                                                        current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = str1;
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                    }
+                                                                }
+                                                                current_user->restaurant.at(select - 1).address = str2;
+
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).address = str2;
+                                                                    }
+                                                                }
+                                                                writeR_InfoTextFile();
+                                                                writeRestTextFile();
+                                                                cout << "수정 완료\n" << endl;
+                                                            }
+                                                            else continue;
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                            else if (regex_match(str2, Day_Checker))
+                                            {//두번째 문자열이 시간
+                                                for (int i = 0; i < str2.size(); i++) {
+                                                    str2[i] = tolower(str2[i]);
+                                                }
+                                                int k = 0;
+                                                if (current_user->restaurant.at(select - 1).close_day.at(0) == str2) {
+                                                    //휴무삭제
+                                                        //시간 주소 판별
+                                                    if (regex_match(str1, match2_2, Time_Checker))
+                                                    {//시간
+
+
+                                                        if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+
+                                                        if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        cout << "휴무일 " << str2 << " 삭제" << endl;
+                                                        cout << "영업시간: " << str1 << " 수정" << endl;
+                                                        if (yesorno()) {
+                                                            current_user->restaurant.at(select - 1).open_hour.clear();
+
+                                                            current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                            current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                                    user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                                }
+                                                            }
+                                                            save_Openhour(select - 1, match2_2, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
+                                                                }
+                                                            }
+                                                            writeR_InfoTextFile();
+                                                            cout << "수정 완료\n" << endl;
+                                                            break;
+                                                        }
+                                                        else {
+                                                            continue;
+                                                        }
+                                                    }
+                                                    else
+                                                    {//주소
+                                                        bool check = false;
+                                                        for (int i = 0; i < 10; i++) {//주소검사
+                                                            if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
+                                                                check = true;
+                                                                break;
+                                                            }
+                                                            else {
+                                                                check = false;
+                                                            }
+                                                        }
+                                                        if (!(check)) {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        else {
+                                                            cout << "휴무일 " << str2 << " 삭제" << endl;
+                                                            cout << "주소 " << str1 << " 수정" << endl;
+                                                            if (yesorno()) {
+                                                                current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                                current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                                current_user->restaurant.at(select - 1).address = str1;
+
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
+                                                                    }
+                                                                }
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).address = str1;
+                                                                    }
+                                                                }
+                                                                writeR_InfoTextFile();
+                                                                writeRestTextFile();
+                                                                cout << "수정 완료\n" << endl;
+                                                            }
+                                                            else continue;
+                                                        }
+                                                    }
+
+                                                }
+                                                else {
+                                                    //휴무변경
+
+                                                        //시간 주소 판별 
+                                                    if (regex_match(str1, match2_2, Time_Checker))
+                                                    {//시간
+
+                                                        if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+
+                                                        if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
+                                                        {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        cout << "휴무일 " << str2 << " 수정" << endl;
+                                                        cout << "영업시간: " << str1 << " 수정" << endl;
+                                                        if (yesorno()) {
+                                                            current_user->restaurant.at(select - 1).open_hour.clear();
+                                                            current_user->restaurant.at(select - 1).close_day.at(0) = str2;
+                                                            for (k = 0; k < 7; k++) {
+                                                                if (humooil[k] == str2) {
+                                                                    current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                    break;
+                                                                }
+                                                            }
+                                                            save_Openhour(select - 1, match2_2, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                            for (int j = 0; j < user.size(); j++) {
+                                                                if (user.at(j).id == current_user->id) {
+                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
+                                                                }
+                                                            }
+
+                                                            writeR_InfoTextFile();
+                                                            cout << "수정 완료\n" << endl;
+                                                            continue;
+                                                        }
+                                                        else {
+                                                            continue;
+                                                        }
+                                                    }
+                                                    else
+                                                    {//주소
+                                                        bool check = false;
+                                                        for (int i = 0; i < 10; i++) {//주소검사
+                                                            if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
+                                                                check = true;
+                                                                break;
+                                                            }
+                                                            else {
+                                                                check = false;
+                                                            }
+                                                        }
+                                                        if (!(check)) {
+                                                            cout << "잘못된 형식입니다.\n" << endl;
+                                                            continue;
+                                                        }
+                                                        else {
+                                                            cout << "휴무일 " << str2 << " 수정" << endl;
+                                                            cout << "주소 " << str1 << " 수정" << endl;
+                                                            if (yesorno()) {
+                                                                current_user->restaurant.at(select - 1).close_day.at(0) = str2;
+                                                                for (k = 0; k < 7; k++) {
+                                                                    if (humooil[k] == str2) {
+                                                                        current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                current_user->restaurant.at(select - 1).address = str1;
+                                                                //cout << "수정 완료" << endl;
+                                                                //
+
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = str2;
+                                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
+                                                                    }
+                                                                }
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).address = str1;
+                                                                    }
+                                                                }
+                                                                writeR_InfoTextFile();
+                                                                writeRestTextFile();
+                                                                cout << "수정 완료\n" << endl;
+                                                            }
+                                                            else continue;
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                            else if (regex_match(str1, Time_Checker))
+                                            {
+                                                string temp;
+                                                temp = str1;
+                                                str1 = str2;
+                                                str2 = temp;
+                                                {
+                                                    bool check = false;
+                                                    for (int i = 0; i < 10; i++) {//주소검사
+                                                        if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
+                                                            check = true;
+                                                            break;
+                                                        }
+                                                        else {
+                                                            check = false;
+                                                        }
+                                                    }
+                                                    if (!(check)) {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    else {//주소 검사 통과 
+                                                        smatch match3;
+
+
+
+                                                        if (regex_match(str2, match3, Time_Checker))
+                                                        {
+                                                            if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
+                                                            {
+                                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                                continue;
+                                                            }
+
+                                                            cout << "주소 " << str1 << " 수정" << endl;
+                                                            cout << "영업 시간 " << str2 << " 수정" << endl;
+                                                            if (yesorno()) {
+                                                                current_user->restaurant.at(select - 1).open_hour.clear();
+                                                                current_user->restaurant.at(select - 1).address = str1;
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).address = str1;
+                                                                    }
+                                                                }
+                                                                save_Openhour(select - 1, match3, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
+                                                                    }
+                                                                }
+                                                                writeR_InfoTextFile();
+                                                                writeRestTextFile();
+                                                                cout << "수정 완료\n" << endl;
+                                                                continue;
+                                                            }
+                                                            else {
+                                                                continue;
+                                                            }
+
+
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else if (regex_match(str2, Time_Checker))
+                                            {//주소(str1)or시간(str2)의 조합
+
+                                                {
+                                                    bool check = false;
+                                                    for (int i = 0; i < 10; i++) {//주소검사
+                                                        if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
+                                                            check = true;
+                                                            break;
+                                                        }
+                                                        else {
+                                                            check = false;
+                                                        }
+                                                    }
+                                                    if (!(check)) {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    else {//주소 검사 통과 
+                                                        smatch match3;
+
+
+
+                                                        if (regex_match(str2, match3, Time_Checker))
+                                                        {
+                                                            if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
+                                                            {
+                                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                                continue;
+                                                            }
+
+                                                            cout << "주소 " << str1 << " 수정" << endl;
+                                                            cout << "영업 시간 " << str2 << " 수정" << endl;
+                                                            if (yesorno()) {
+                                                                current_user->restaurant.at(select - 1).open_hour.clear();
+                                                                current_user->restaurant.at(select - 1).address = str1;
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).address = str1;
+                                                                    }
+                                                                }
+                                                                save_Openhour(select - 1, match3, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                                for (int j = 0; j < user.size(); j++) {
+                                                                    if (user.at(j).id == current_user->id) {
+                                                                        user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
+                                                                    }
+                                                                }
+                                                                writeR_InfoTextFile();
+                                                                writeRestTextFile();
+                                                                cout << "수정 완료\n" << endl;
+                                                                continue;
+                                                            }
+                                                            else {
+                                                                continue;
+                                                            }
+
+
+
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                            continue;
+                                        }
+                                        else if (scount == 2)
+                                        {//세개의 정보
+                                            vector<string> strd;
+                                            smatch match3;
+                                            vector<char*>stv;
+                                            char* ptr1 = strtok(data_buff, "/");
+                                            while (ptr1 != nullptr) {
+                                                stv.push_back(ptr1);
+                                                ptr1 = strtok(NULL, "/");
+                                            }
+                                            if (stv.size() == 3) {
+                                                strd.push_back((string)stv[0]);
+                                                strd.push_back((string)stv[1]);
+                                                strd.push_back((string)stv[2]);
+                                                trim(strd.at(0));
+                                                trim(strd.at(1));
+                                                trim(strd.at(2));
+                                            }
+                                            else {
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                            cout << strd.at(0) << "/" << strd.at(1) << "/" << strd.at(2) << endl;
+
+                                            //요일을 str.[0]
+                                            string day, adr, time;
+                                            for (int i = 0; i < 3; i++) {
+                                                if (regex_match(strd.at(i), Day_Checker))
+                                                    day = strd.at(i);
+                                                else if (regex_match(strd.at(i), Time_Checker))
+                                                    time = strd.at(i);
+                                                else
+                                                    adr = strd.at(i);
+                                            }
+
+                                            cout << day << "/" << time << "/" << adr << endl;
+                                            for (int i = 0; i < day.size(); i++) {
+                                                day[i] = tolower(day[i]);
+                                            }
+                                            int k = 0;
+                                            if (current_user->restaurant.at(select - 1).close_day.at(0) == day) {
+                                                //휴무삭제
+
+                                                if (regex_match(time, match3, Time_Checker))
+                                                {//시간
+
+
+                                                    if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+
+                                                    if (!(stoi(match3.str(1)) < 24 && stoi(match3.str(3)) < 24 && stoi(match3.str(2)) < 60 && stoi(match3.str(4)) < 60))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    bool check = false;
+                                                    for (int i = 0; i < 10; i++) {//주소검사
+                                                        if (strcmp(adr.c_str(), V_address[i].c_str()) == 0) {
+                                                            check = true;
+                                                            break;
+                                                        }
+                                                        else {
+                                                            check = false;
+                                                        }
+                                                    }
+                                                    if (!(check)) {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    cout << "휴무일 " << day << " 삭제" << endl;
+                                                    cout << "영업시간: " << time << " 수정" << endl;
+                                                    cout << "주소: " << adr << " 수정" << endl;
+                                                    if (yesorno()) {
+                                                        current_user->restaurant.at(select - 1).open_hour.clear();
+                                                        current_user->restaurant.at(select - 1).address = adr;
+
+                                                        for (int j = 0; j < user.size(); j++) {
+                                                            if (user.at(j).id == current_user->id) {
+                                                                user.at(j).restaurant.at(select - 1).address = adr;
+                                                            }
+                                                        }
                                                         current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
                                                         current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                        current_user->restaurant.at(select - 1).address = str1;
-
                                                         for (int j = 0; j < user.size(); j++) {
                                                             if (user.at(j).id == current_user->id) {
                                                                 user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
                                                                 user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
                                                             }
                                                         }
+                                                        save_Openhour(select - 1, match3, current_user->restaurant.at(select - 1).close_day.at(1));
                                                         for (int j = 0; j < user.size(); j++) {
                                                             if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).address = str1;
+                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
                                                             }
                                                         }
                                                         writeR_InfoTextFile();
                                                         writeRestTextFile();
-                                                        cout << "수정 완료" << endl;
-                                                    }
-                                                    else continue;
-                                                }
-                                            }
-
-                                        }
-                                        else {
-                                            //휴무변경
-
-                                                //시간 주소 판별 
-                                            if (regex_match(str1, match2_2, Time_Checker))
-                                            {//시간
-                                                current_user->restaurant.at(select - 1).open_hour.clear();
-                                                if (stoi(match2_2.str(1)) == stoi(match2_2.str(3)) && stoi(match2_2.str(2)) == stoi(match2_2.str(4)))
-                                                {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
-                                                }
-
-                                                if (!(stoi(match2_2.str(1)) < 24 && stoi(match2_2.str(3)) < 24 && stoi(match2_2.str(2)) < 60 && stoi(match2_2.str(4)) < 60))
-                                                {
-                                                    cout << "잘못된 형식입니다." << endl;
-                                                    continue;
-                                                }
-                                                cout << "휴무일 " << str2 << " 수정" << endl;
-                                                cout << "영업시간: " << str1 << " 수정" << endl;
-                                                if (yesorno()) {
-                                                    string temp[4];
-                                                    temp->clear();
-                                                    for (int i = 0; i < 4; i++) {
-                                                        temp[i] = match2_2.str(i + 1);
-                                                        if (match2_2.str(i + 1).size() == 1) {
-                                                            temp[i] = "0" + match2_2.str(i + 1);
-                                                        }
-                                                    }
-                                                    current_user->restaurant.at(select - 1).close_day.at(0) = str2;
-                                                    for (k = 0; k < 7; k++) {
-                                                        if (humooil[k] == str2) {
-                                                            current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
-                                                            break;
-                                                        }
-                                                    }
-                                                    string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                    string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                    if (stoi(match2_2.str(1)) >= stoi(match2_2.str(3)) && stoi(match2_2.str(2)) >= stoi(match2_2.str(4))) {
-                                                        //앞시간이 뒷시간 보다 크면나누어 저장
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(to_string((stoi(index) + 1) % 7));
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
-                                                        }
-                                                    }
-                                                    else {
-                                                        //자정을 포함하지 않는 시간
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                        current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                            }
-                                                        }
-                                                    }
-                                                    writeR_InfoTextFile();
-                                                    cout << "수정 완료" << endl;
-                                                    continue;
-                                                }
-                                                else {
-                                                    continue;
-                                                }
-                                            }
-                                            else
-                                            {//주소
-                                                bool check = false;
-                                                for (int i = 0; i < 10; i++) {//주소검사
-                                                    if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
-                                                        check = true;
+                                                        cout << "수정 완료\n" << endl;
                                                         break;
                                                     }
                                                     else {
-                                                        check = false;
+                                                        continue;
                                                     }
                                                 }
-                                                if (!(check)) {
-                                                    cout << "잘못된 형식입니다." << endl;
+                                                else
+                                                {//시간 정규식 실패
                                                     continue;
                                                 }
-                                                else {
-                                                    cout << "휴무일 " << str2 << " 수정" << endl;
-                                                    cout << "주소 " << str1 << " 수정" << endl;
+
+                                            }
+                                            else {
+                                                //휴무변경
+                                                if (regex_match(time, match3, Time_Checker))
+                                                {//시간
+
+                                                    if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+
+                                                    if (!(stoi(match3.str(1)) < 24 && stoi(match3.str(3)) < 24 && stoi(match3.str(2)) < 60 && stoi(match3.str(4)) < 60))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    bool check = false;
+                                                    for (int i = 0; i < 10; i++) {//주소검사
+                                                        if (strcmp(adr.c_str(), V_address[i].c_str()) == 0) {
+                                                            check = true;
+                                                            break;
+                                                        }
+                                                        else {
+                                                            check = false;
+                                                        }
+                                                    }
+                                                    if (!(check)) {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    cout << "휴무일 " << day << " 수정" << endl;
+                                                    cout << "영업시간: " << time << " 수정" << endl;
+                                                    cout << "주소: " << adr << " 수정" << endl;
                                                     if (yesorno()) {
-                                                        current_user->restaurant.at(select - 1).close_day.at(0) = str2;
+                                                        current_user->restaurant.at(select - 1).open_hour.clear();
+
+                                                        current_user->restaurant.at(select - 1).address = adr;
+
+
+                                                        for (int j = 0; j < user.size(); j++) {
+                                                            if (user.at(j).id == current_user->id) {
+                                                                user.at(j).restaurant.at(select - 1).address = adr;
+                                                            }
+                                                        }
+                                                        current_user->restaurant.at(select - 1).close_day.at(0) = day;
                                                         for (k = 0; k < 7; k++) {
-                                                            if (humooil[k] == str2) {
+                                                            if (humooil[k] == day) {
                                                                 current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
                                                                 break;
                                                             }
                                                         }
-                                                        current_user->restaurant.at(select - 1).address = str1;
-                                                        //cout << "수정 완료" << endl;
-                                                        //
-
                                                         for (int j = 0; j < user.size(); j++) {
                                                             if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).close_day.at(0) = str2;
+                                                                user.at(j).restaurant.at(select - 1).close_day.at(0) = day;
                                                                 user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
                                                             }
                                                         }
+                                                        save_Openhour(select - 1, match3, current_user->restaurant.at(select - 1).close_day.at(1));
                                                         for (int j = 0; j < user.size(); j++) {
                                                             if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).address = str1;
+                                                                user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
                                                             }
                                                         }
                                                         writeR_InfoTextFile();
                                                         writeRestTextFile();
-                                                        cout << "수정 완료" << endl;
-                                                    }
-                                                    else continue;
-                                                }
-                                            }
-
-                                        }
-                                    }
-                                    else if (regex_match(str1, Time_Checker))
-                                    {
-                                        string temp;
-                                        temp = str1;
-                                        str1 = str2;
-                                        str2 = temp;
-                                        {
-                                            bool check = false;
-                                            for (int i = 0; i < 10; i++) {//주소검사
-                                                if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
-                                                    check = true;
-                                                    break;
-                                                }
-                                                else {
-                                                    check = false;
-                                                }
-                                            }
-                                            if (!(check)) {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            else {//주소 검사 통과 
-                                                smatch match3;
-
-
-
-                                                if (regex_match(str2, match3, Time_Checker))
-                                                {
-                                                    if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
-                                                    {
-                                                        cout << "잘못된 형식입니다." << endl;
-                                                        continue;
-                                                    }
-
-                                                    cout << "주소 " << str1 << " 수정" << endl;
-                                                    cout << "영업 시간 " << str2 << " 수정" << endl;
-                                                    if (yesorno()) {
-                                                        string temp[4];
-                                                        temp->clear();
-                                                        for (int i = 0; i < 4; i++) {
-                                                            temp[i] = match3.str(i + 1);
-                                                            if (match3.str(i + 1).size() == 1) {
-                                                                temp[i] = "0" + match3.str(i + 1);
-                                                            }
-                                                        }
-                                                        current_user->restaurant.at(select - 1).open_hour.clear();
-                                                        current_user->restaurant.at(select - 1).address = str1;
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).address = str1;
-                                                            }
-                                                        }
-                                                        string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                        string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                        if (stoi(match3.str(1)) >= stoi(match3.str(3)) && stoi(match3.str(2)) > stoi(match3.str(4))) {
-                                                            //앞시간이 뒷시간 보다 크면나누어 저장
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                            if (index == "-1")
-                                                                current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                            else
-                                                                current_user->restaurant.at(select - 1).open_hour.push_back(to_string((stoi(index) + 1) % 7));
-
-                                                            for (int j = 0; j < user.size(); j++) {
-                                                                if (user.at(j).id == current_user->id) {
-                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                                }
-                                                            }
-                                                        }
-                                                        else {
-                                                            //자정을 포함하지 않는 시간
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(index);
-
-                                                            for (int j = 0; j < user.size(); j++) {
-                                                                if (user.at(j).id == current_user->id) {
-                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                                }
-                                                            }
-                                                        }
-                                                        writeR_InfoTextFile();
-                                                        writeRestTextFile();
-                                                        cout << "수정 완료" << endl;
+                                                        cout << "수정 완료\n" << endl;
                                                         continue;
                                                     }
                                                     else {
                                                         continue;
                                                     }
-
-
-
                                                 }
-                                            }
-                                        }
-                                    }
-                                    else if (regex_match(str2, Time_Checker))
-                                    {//주소(str1)or시간(str2)의 조합
-
-                                        {
-                                            bool check = false;
-                                            for (int i = 0; i < 10; i++) {//주소검사
-                                                if (strcmp(str1.c_str(), V_address[i].c_str()) == 0) {
-                                                    check = true;
-                                                    break;
-                                                }
-                                                else {
-                                                    check = false;
-                                                }
-                                            }
-                                            if (!(check)) {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            else {//주소 검사 통과 
-                                                smatch match3;
-
-
-
-                                                if (regex_match(str2, match3, Time_Checker))
+                                                else
                                                 {
-                                                    if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
-                                                    {
-                                                        cout << "잘못된 형식입니다.." << endl;
-                                                        continue;
-                                                    }
-
-                                                    cout << "주소 " << str1 << " 수정" << endl;
-                                                    cout << "영업 시간 " << str2 << " 수정" << endl;
-                                                    if (yesorno()) {
-                                                        string temp[4];
-                                                        temp->clear();
-                                                        for (int i = 0; i < 4; i++) {
-                                                            temp[i] = match3.str(i + 1);
-                                                            if (match3.str(i + 1).size() == 1) {
-                                                                temp[i] = "0" + match3.str(i + 1);
-                                                            }
-                                                        }
-                                                        current_user->restaurant.at(select - 1).open_hour.clear();
-                                                        current_user->restaurant.at(select - 1).address = str1;
-                                                        for (int j = 0; j < user.size(); j++) {
-                                                            if (user.at(j).id == current_user->id) {
-                                                                user.at(j).restaurant.at(select - 1).address = str1;
-                                                            }
-                                                        }
-                                                        string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                        string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                        if (stoi(match3.str(1)) >= stoi(match3.str(3)) && stoi(match3.str(2)) > stoi(match3.str(4))) {
-                                                            //앞시간이 뒷시간 보다 크면나누어 저장
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                            if (index == "-1")
-                                                                current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                            else
-                                                                current_user->restaurant.at(select - 1).open_hour.push_back(to_string((stoi(index) + 1) % 7));
-
-                                                            for (int j = 0; j < user.size(); j++) {
-                                                                if (user.at(j).id == current_user->id) {
-                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                                }
-                                                            }
-                                                        }
-                                                        else {
-                                                            //자정을 포함하지 않는 시간
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                            current_user->restaurant.at(select - 1).open_hour.push_back(index);
-
-                                                            for (int j = 0; j < user.size(); j++) {
-                                                                if (user.at(j).id == current_user->id) {
-                                                                    user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                                }
-                                                            }
-                                                        }
-                                                        writeR_InfoTextFile();
-                                                        writeRestTextFile();
-                                                        cout << "수정 완료" << endl;
-                                                        continue;
-                                                    }
-                                                    else {
-                                                        continue;
-                                                    }
-
-
-
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
                                                 }
+
                                             }
+
+                                            continue;
                                         }
-
-                                    }
-                                    continue;
-                                }
-                                else if (scount == 2)
-                                {//세개의 정보
-                                    vector<string> strd;
-                                    smatch match3;
-                                    vector<char*>stv;
-                                    char* ptr1 = strtok(data_buff, "/");
-                                    while (ptr1 != nullptr) {
-                                        stv.push_back(ptr1);
-                                        ptr1 = strtok(NULL, "/");
-                                    }
-                                    if (stv.size() == 3) {
-                                        strd.push_back((string)stv[0]);
-                                        strd.push_back((string)stv[1]);
-                                        strd.push_back((string)stv[2]);
-                                        trim(strd.at(0));
-                                        trim(strd.at(1));
-                                        trim(strd.at(2));
-                                    }
-                                    else {
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                    cout << strd.at(0) << "/" << strd.at(1) << "/" << strd.at(2) << endl;
-
-                                    //요일을 str.[0]
-                                    string day, adr, time;
-                                    for (int i = 0; i < 3; i++) {
-                                        if (regex_match(strd.at(i), Day_Checker))
-                                            day = strd.at(i);
-                                        else if (regex_match(strd.at(i), Time_Checker))
-                                            time = strd.at(i);
-                                        else
-                                            adr = strd.at(i);
-                                    }
-
-                                    cout << day << "/" << time << "/" << adr << endl;
-                                    for (int i = 0; i < day.size(); i++) {
-                                        day[i] = tolower(day[i]);
-                                    }
-                                    int k = 0;
-                                    if (current_user->restaurant.at(select - 1).close_day.at(0) == day) {
-                                        //휴무삭제
-                                            //시간 주소 판별
-                                        if (regex_match(time, match3, Time_Checker))
-                                        {//시간
-
-                                            current_user->restaurant.at(select - 1).open_hour.clear();
-                                            if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
-                                            {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-
-                                            if (!(stoi(match3.str(1)) < 24 && stoi(match3.str(3)) < 24 && stoi(match3.str(2)) < 60 && stoi(match3.str(4)) < 60))
-                                            {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            bool check = false;
-                                            for (int i = 0; i < 10; i++) {//주소검사
-                                                if (strcmp(adr.c_str(), V_address[i].c_str()) == 0) {
-                                                    check = true;
-                                                    break;
-                                                }
-                                                else {
-                                                    check = false;
-                                                }
-                                            }
-                                            if (!(check)) {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            cout << "휴무일 " << day << " 삭제" << endl;
-                                            cout << "영업시간: " << time << " 수정" << endl;
-                                            cout << "주소: " << adr << " 수정" << endl;
-                                            if (yesorno()) {
-                                                string temp[4];
-                                                temp->clear();
-                                                for (int i = 0; i < 4; i++) {
-                                                    temp[i] = match3.str(i + 1);
-                                                    if (match3.str(i + 1).size() == 1) {
-                                                        temp[i] = "0" + match3.str(i + 1);
-                                                    }
-                                                }
-                                                current_user->restaurant.at(select - 1).address = adr;
-
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).address = adr;
-                                                    }
-                                                }
-                                                current_user->restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                current_user->restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = "\0";
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = "-1";
-                                                    }
-                                                }
-                                                string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                if (stoi(match3.str(1)) >= stoi(match3.str(3)) && stoi(match3.str(2)) >= stoi(match3.str(4))) {
-                                                    //앞시간이 뒷시간 보다 크면나누어 저장
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(index);
-
-
-                                                    for (int j = 0; j < user.size(); j++) {
-                                                        if (user.at(j).id == current_user->id) {
-                                                            user.at(j).restaurant.at(select - 1).open_hour.clear();
-                                                            user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                        }
-                                                    }
-                                                }
-                                                else {
-                                                    //자정을 포함하지 않는 시간
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(index);
-
-
-                                                    for (int j = 0; j < user.size(); j++) {
-                                                        if (user.at(j).id == current_user->id) {
-                                                            user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                        }
-                                                    }
-                                                }
-                                                writeR_InfoTextFile();
-                                                writeRestTextFile();
-                                                cout << "수정 완료" << endl;
-                                                break;
-                                            }
-                                            else {
-                                                continue;
-                                            }
-                                        }
-                                        else
-                                        {//주소
+                                        else {
+                                            cout << "잘못된 형식입니다.\n" << endl;
                                             continue;
                                         }
 
                                     }
-                                    else {
-                                        //휴무변경
-
-                                            //시간 주소 판별 
-                                        if (regex_match(time, match3, Time_Checker))
-                                        {//시간
-                                            current_user->restaurant.at(select - 1).open_hour.clear();
-                                            if (stoi(match3.str(1)) == stoi(match3.str(3)) && stoi(match3.str(2)) == stoi(match3.str(4)))
-                                            {
-                                                cout << "잘못된 형식입니다.." << endl;
-                                                continue;
-                                            }
-
-                                            if (!(stoi(match3.str(1)) < 24 && stoi(match3.str(3)) < 24 && stoi(match3.str(2)) < 60 && stoi(match3.str(4)) < 60))
-                                            {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            bool check = false;
-                                            for (int i = 0; i < 10; i++) {//주소검사
-                                                if (strcmp(adr.c_str(), V_address[i].c_str()) == 0) {
-                                                    check = true;
-                                                    break;
-                                                }
-                                                else {
-                                                    check = false;
-                                                }
-                                            }
-                                            if (!(check)) {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            cout << "휴무일 " << day << " 수정" << endl;
-                                            cout << "영업시간: " << time << " 수정" << endl;
-                                            cout << "주소: " << adr << " 수정" << endl;
-                                            if (yesorno()) {
-
-                                                string temp[4];
-                                                temp->clear();
-                                                for (int i = 0; i < 4; i++) {
-                                                    temp[i] = match3.str(i + 1);
-                                                    if (match3.str(i + 1).size() == 1) {
-                                                        temp[i] = "0" + match3.str(i + 1);
-                                                    }
-                                                }
-                                                current_user->restaurant.at(select - 1).address = adr;
-
-
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).address = adr;
-                                                    }
-                                                }
-                                                current_user->restaurant.at(select - 1).close_day.at(0) = day;
-                                                for (k = 0; k < 7; k++) {
-                                                    if (humooil[k] == day) {
-                                                        current_user->restaurant.at(select - 1).close_day.at(1) = to_string(k);
-                                                        break;
-                                                    }
-                                                }
-                                                for (int j = 0; j < user.size(); j++) {
-                                                    if (user.at(j).id == current_user->id) {
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(0) = day;
-                                                        user.at(j).restaurant.at(select - 1).close_day.at(1) = to_string(k);
-                                                    }
-                                                }
-                                                string humoo = current_user->restaurant.at(select - 1).close_day.at(0);
-                                                string index = current_user->restaurant.at(select - 1).close_day.at(1);
-                                                //current_user->restaurant.at(select - 1).open_hour.clear();
-                                                if (stoi(match3.str(1)) >= stoi(match3.str(3)) && stoi(match3.str(2)) >= stoi(match3.str(4))) {
-                                                    //앞시간이 뒷시간 보다 크면나누어 저장
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(to_string((stoi(index) + 1) % 7));
-                                                    for (int j = 0; j < user.size(); j++) {
-                                                        if (user.at(j).id == current_user->id) {
-                                                            user.at(j).restaurant.at(select - 1).open_hour.clear();
-                                                            user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                        }
-                                                    }
-                                                }
-                                                else {
-                                                    //자정을 포함하지 않는 시간
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(index);
-                                                    for (int j = 0; j < user.size(); j++) {
-                                                        if (user.at(j).id == current_user->id) {
-                                                            user.at(j).restaurant.at(select - 1).open_hour.assign(current_user->restaurant.at(select - 1).open_hour.begin(), current_user->restaurant.at(select - 1).open_hour.end());
-                                                        }
-                                                    }
-                                                }
-                                                writeR_InfoTextFile();
-                                                writeRestTextFile();
-                                                cout << "수정 완료" << endl;
-                                                continue;
-                                            }
-                                            else {
-                                                continue;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-
-                                    }
-
-
-
-
-
-
-                                    continue;
                                 }
-
+                                else {
+                                    cout << "잘못된 형식입니다.\n" << endl;
+                                    cin.clear();
+                                }
+                            }
+                            else if (menu2 > 3 || menu2 < 1) {
+                                cout << "잘못된 형식입니다.\n" << endl;
                             }
                         }
                         else {
-                            cout << "잘못된 형식입니다." << endl;
-                            cin.clear();
+                            cout << "잘못된 형식입니다.\n" << endl;
                         }
                     }
-                    else if (cin.fail()) {
-                        cin.clear();
-                        cin.ignore(INT_MAX, '\n');
-                        cout << "잘못된 형식입니다." << endl;
-                    }
-                    else {
-                        cin.clear();
-                        cin.ignore(INT_MAX, '\n');
-                        cout << "잘못된 형식입니다." << endl;
+                }
+                else {
+                    //need info
+                    while (true) {
+                        cout << "\n\n부가정보 등록" << endl;
+                        cout << "1. 메뉴/가격 등록 \n2. 시간/휴무일 등록 \n3. 이전메뉴" << endl;
+                        cout << "보기 선택: ";
+                        string str_select_menu;
+
+                        getline(cin, str_select_menu);
+                        regex menuCHECK("^([1-3]){1}$");
+                        if (regex_match(str_select_menu, menuCHECK)) {
+                            const char* buff_str = str_select_menu.c_str();
+                            int select_menu = atoi(buff_str);
+                            //cin.ignore(INT_MAX,'\n');//버퍼 제거 
+                            if (select_menu <= 3 && select_menu >= 1) {
+                                if (select_menu == 3) break;
+                                else if (select_menu == 1)
+                                {
+                                    if (!current_user->restaurant.at(select - 1).menu.empty()) {
+                                        cout << "이미 메뉴가 등록되어 있습니다\n" << endl;
+                                        continue;
+                                    }
+                                    string M_name, M_price, temp;
+                                    string input;
+                                    regex M_name_Checker("[a-zA-Z\\s]*");
+                                    // regex M_price_Checker("^[1-9]?(,|[0-9])[\\S]*");
+                                    while (true) {
+                                        cout << "\n\n메뉴는 영어 소문자와 공백으로 1~15자 이내로 입력해주세요" << endl;
+                                        cout << "2개이상의 공백은 1개로 치환되며 맨 앞, 맨 뒤 공백은 제거됩니다." << endl;
+                                        cout << "가격은 100~99999 의 범위로 제한 합니다." << endl;
+                                        cout << "쉼표는 맨 앞이 아닌 어디든 등장할 수 있고, 두개를 연속으로 사용할 수 없습니다." << endl;
+                                        cout << "각 데이터는 (/)로 구분해서 입력해주세요" << endl;
+                                        cout << "메뉴/가격정보: ";
+                                        getline(cin, input);
+                                        if (!isin0to128(input)) {
+                                            cout << "한국어 입력 금지\n" << endl;
+                                            continue;
+                                        }
+                                        char* data_buff = new char[input.size() + 1];
+                                        strcpy(data_buff, input.c_str());
+                                        //trim(input);//앞뒤공백은 자르기
+                                        int scount = 0;
+                                        for (int i = 0; i < input.size(); i++) {
+                                            if ((int)input[i] == 47)
+                                                scount++;
+                                        }
+                                        //cout << "scount : " << scount << endl;
+
+                                        if (scount != 1) {
+                                            if (isQuit(input)) break;
+                                            cout << "잘못된 형식입니다.\n" << endl;
+                                            continue;//슬래시 1개 아니면 다시입력받기
+                                        }
+                                        trim(input);//앞뒤공백은 자르기
+                                        if (!isQuit(input)) {
+                                            vector<char*>stv;
+                                            char* ptr1 = strtok(data_buff, "/");
+                                            while (ptr1 != nullptr) {
+                                                stv.push_back(ptr1);
+                                                ptr1 = strtok(NULL, "/");
+                                            }
+                                            if (stv.size() == 2) {
+                                                M_name = (string)stv[0];
+                                                M_price = (string)stv[1];
+                                            }
+                                            else {
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                            trim(M_name);
+                                            trim(M_price);
+                                            if (regex_match(M_name, M_name_Checker))
+                                            {
+                                                if (!oneSpaceLength(M_name)) { continue; }
+                                                for (int i = 0; i < M_name.size(); i++) {
+                                                    M_name[i] = tolower(M_name[i]);
+                                                }
+                                                if (!isMoney(M_price)) {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
+                                                }
+
+                                                if (M_price.find(",") != -1) {
+                                                    while (M_price.find(",") != -1)
+                                                        M_price.replace(M_price.find(","), 1, "");
+                                                }
+
+                                                cout << "메뉴이름: " << M_name << endl;
+                                                cout << "메뉴가격: " << M_price << endl;
+                                                if (yesorno()) {
+                                                    current_user->restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
+                                                    ofstream writeFile;
+                                                    SetFileAttributes(_T("Restaurant_Menu.txt"), FILE_ATTRIBUTE_NORMAL);
+                                                    writeFile.open("Restaurant_Menu.txt", std::ofstream::out | std::ofstream::app);
+                                                    if (writeFile.is_open()) {
+                                                        string str = current_user->restaurant.at(select - 1).name + "/" + M_name + "/" + M_price + "\n";
+                                                        writeFile.write(str.c_str(), str.size());
+                                                    }
+                                                    else {
+                                                        cout << "파일 오픈 오류\n" << endl;
+                                                    }
+                                                    SetFileAttributes(_T("Restaurant_Menu.txt"), FILE_ATTRIBUTE_READONLY);
+                                                    writeFile.close();
+                                                    readR_MenuTextFile();
+                                                    //menu.push_back(Menu(price, M_name));
+                                                    cout << "등록 완료\n" << endl;
+                                                    break;
+                                                }
+                                                else {
+                                                    continue;
+                                                }
+                                            }
+                                            else if (regex_match(M_price, M_name_Checker))
+                                            {
+                                                temp = M_price;
+                                                M_price = M_name;
+                                                M_name = temp;
+                                                if (!oneSpaceLength(M_name)) { continue; }
+                                                for (int i = 0; i < M_name.size(); i++) {
+                                                    M_name[i] = tolower(M_name[i]);
+                                                }
+                                                if (!isMoney(M_price)) {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
+                                                }
+                                                if (M_price.find(",") != -1) {
+                                                    while (M_price.find(",") != -1)
+                                                        M_price.replace(M_price.find(","), 1, "");
+                                                }
+                                                cout << "메뉴이름: " << M_name << endl;
+                                                cout << "메뉴가격: " << M_price << endl;
+                                                if (yesorno()) {
+                                                    current_user->restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
+                                                    ofstream writeFile;
+                                                    SetFileAttributes(_T("Restaurant_Menu.txt"), FILE_ATTRIBUTE_NORMAL);
+                                                    writeFile.open("Restaurant_Menu.txt", std::ofstream::out | std::ofstream::app);
+                                                    if (writeFile.is_open()) {
+                                                        string str = current_user->restaurant.at(select - 1).name + "/" + M_name + "/" + M_price + "\n";
+                                                        writeFile.write(str.c_str(), str.size());
+                                                    }
+                                                    else {
+                                                        cout << "파일 오픈 오류\n" << endl;
+                                                    }
+                                                    SetFileAttributes(_T("Restaurant_Menu.txt"), FILE_ATTRIBUTE_READONLY);
+                                                    writeFile.close();
+                                                    readR_MenuTextFile();
+                                                    cout << "등록 완료\n" << endl;
+                                                    break;
+                                                }
+                                                else {
+                                                    continue;
+                                                }
+                                            }
+                                            else {//둘다 정규식 안맞음->재입력
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            return;
+                                        }
+                                    }
+                                }
+                                else if (select_menu == 2)
+                                {
+                                    if (!current_user->restaurant.at(select - 1).open_hour.empty()) {
+                                        cout << "이미 부가정보가 등록되어 있습니다\n" << endl;
+                                        continue;
+                                    }
+                                    string hour, close_day, temp;
+                                    string input;
+                                    regex Time_Checker("([0-9]{1,2})\:([0-9]{1,2})\~([0-9]{1,2})\:([0-9]{1,2})*$");
+                                    regex Day_Checker("^[a-zA-Z]+(DAY|DAy|DaY|Day|day|daY|dAY|dAy)$");
+                                    while (true) {
+                                        cout << "\n\n영업시간은 24시간 형식으로 사용하여 주시고 00시와 24시의 혼동을 없애기 위해 24시는 입력받지 않습니다." << endl;
+                                        cout << "시작 시간과 종료 시간은 특수문자(~)로 구분되며 각 시간의 시와 분은 (:)로 구분됩니다." << endl;
+                                        cout << "공백 입력은 금지됩니다." << endl;
+                                        cout << "휴무일은 영문 소문자로 monday, tuesday, wednesday thursday friday saturday sunday 중 하나를 입력받습니다." << endl;
+                                        cout << "영업시간은 필수로 등록해야 하지만 휴무일은 등록하지 않아도 됩니다." << endl;
+                                        cout << "각 데이터는 (/)로 구분해서 입력해주세요" << endl;
+                                        cout << "시간/휴무정보: ";
+                                        getline(cin, input);
+                                        if (!isin0to128(input)) {
+                                            cout << "한국어 입력 금지\n" << endl;
+                                            continue;
+                                        }
+                                        char* data_buff = new char[input.size() + 1];
+                                        strcpy(data_buff, input.c_str());
+                                        //trim(input);//앞뒤공백은 자르기
+                                        int scount = 0;
+                                        for (int i = 0; i < input.size(); i++) {
+                                            if ((int)input[i] == 47)
+                                                scount++;
+                                        }
+                                        //cout << "scount : " << scount << endl;
+
+                                        if (scount != 1) {
+                                            if (isQuit(input)) break;
+                                            smatch match;
+                                            if (regex_match(input, match, Time_Checker)) {
+                                                if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
+                                                {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
+                                                }
+
+                                                if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
+                                                {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
+                                                }
+                                                cout << "영업시간: " << input << endl;
+                                                cout << "휴무일 없음" << endl;
+                                                if (yesorno()) {
+                                                    current_user->restaurant.at(select - 1).close_day.push_back("\0");
+                                                    current_user->restaurant.at(select - 1).close_day.push_back(to_string(-1));
+                                                    //휴무일이랑 인덱스 저장
+                                                    string time = save_Openhour(select - 1, match, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                    string adr = current_user->restaurant.at(select - 1).address;
+                                                    string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "\n";
+
+                                                    ofstream writeFile;
+                                                    SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_NORMAL);
+                                                    writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
+                                                    if (writeFile.is_open()) {
+                                                        writeFile.write(str.c_str(), str.size());
+                                                    }
+                                                    else {
+                                                        cout << "파일 오픈 오류\n" << endl;
+                                                    }
+                                                    SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_READONLY);
+                                                    writeFile.close();
+                                                    readR_InfoTextFile();
+                                                    cout << "등록 완료\n" << endl;
+                                                    break;
+                                                }
+                                                else {
+                                                    continue;
+                                                }
+                                            }
+                                            else {
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                            cout << "잘못된 형식입니다.\n" << endl;
+                                            continue;//슬래시 1개 아니면 다시입력받기
+                                        }
+                                        trim(input);//앞뒤공백은 자르기
+                                        if (!isQuit(input)) {
+                                            vector<char*>stv;
+                                            char* ptr1 = strtok(data_buff, "/");
+                                            while (ptr1 != nullptr) {
+                                                stv.push_back(ptr1);
+                                                ptr1 = strtok(NULL, "/");
+                                            }
+                                            if (stv.size() == 2) {
+                                                hour = (string)stv[0];
+                                                close_day = (string)stv[1];
+                                            }
+                                            else {
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                            trim(hour);
+                                            trim(close_day);
+                                            smatch match;
+                                            if (regex_match(close_day, Day_Checker))
+                                            {
+                                                for (int i = 0; i < close_day.size(); i++) {
+                                                    close_day[i] = tolower(close_day[i]);
+                                                }
+
+                                                if (regex_match(hour, match, Time_Checker)) {
+                                                    if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+
+                                                    if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    cout << "영업시간: " << hour << endl;
+                                                    cout << "휴무일: " << close_day << endl;
+                                                    if (yesorno()) {
+                                                        current_user->restaurant.at(select - 1).close_day.push_back(close_day);
+                                                        int i = 0;
+                                                        for (int i = 0; i < 7; i++) {
+                                                            if (humooil[i] == close_day) {
+                                                                current_user->restaurant.at(select - 1).close_day.push_back(to_string(i));
+                                                                break;
+                                                            }
+                                                        } //휴무일이랑 인덱스 저장
+                                                        string time = save_Openhour(select - 1, match, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                        string adr = current_user->restaurant.at(select - 1).address;
+                                                        string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "/" + close_day + "\n";
+                                                        ofstream writeFile;
+                                                        SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_NORMAL);
+                                                        writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
+                                                        if (writeFile.is_open()) {
+                                                            writeFile.write(str.c_str(), str.size());
+                                                        }
+                                                        else {
+                                                            cout << "파일 오픈 오류\n" << endl;
+                                                        }
+                                                        SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_READONLY);
+                                                        writeFile.close();
+                                                        readR_InfoTextFile();
+                                                        cout << "등록 완료\n" << endl;
+                                                        break;
+                                                    }
+                                                    else {
+                                                        continue;
+                                                    }
+                                                }
+                                                else {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
+                                                }
+                                            }
+                                            else if (regex_match(hour, Day_Checker))
+                                            {
+                                                temp = hour;
+                                                hour = close_day;
+                                                close_day = temp;
+                                                for (int i = 0; i < close_day.size(); i++) {
+                                                    close_day[i] = tolower(close_day[i]);
+                                                }
+
+                                                if (regex_match(hour, match, Time_Checker)) {
+                                                    if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+
+                                                    if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
+                                                    {
+                                                        cout << "잘못된 형식입니다.\n" << endl;
+                                                        continue;
+                                                    }
+                                                    cout << "영업시간: " << hour << endl;
+                                                    cout << "휴무일: " << close_day << endl;
+                                                    if (yesorno()) {
+
+                                                        current_user->restaurant.at(select - 1).close_day.push_back(close_day);
+                                                        int i = 0;
+                                                        for (int i = 0; i < 7; i++) {
+                                                            if (humooil[i] == close_day) {
+                                                                current_user->restaurant.at(select - 1).close_day.push_back(to_string(i));
+                                                                break;
+                                                            }
+                                                        } //휴무일이랑 인덱스 저장
+                                                        string time = save_Openhour(select - 1, match, current_user->restaurant.at(select - 1).close_day.at(1));
+                                                        string adr = current_user->restaurant.at(select - 1).address;
+                                                        string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "/" + close_day + "\n";
+                                                        ofstream writeFile;
+                                                        SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_NORMAL);
+                                                        writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
+                                                        if (writeFile.is_open()) {
+                                                            writeFile.write(str.c_str(), str.size());
+                                                        }
+                                                        else {
+                                                            cout << "파일 오픈 오류\n" << endl;
+                                                        }
+                                                        SetFileAttributes(_T("Restaurant_Info.txt"), FILE_ATTRIBUTE_READONLY);
+                                                        writeFile.close();
+                                                        readR_InfoTextFile();
+                                                        cout << "등록 완료\n" << endl;
+                                                        break;
+                                                    }
+                                                    else {
+                                                        continue;
+                                                    }
+                                                }
+                                                else {
+                                                    cout << "잘못된 형식입니다.\n" << endl;
+                                                    continue;
+                                                }
+                                            }
+                                            else {//둘다 정규식 안맞음->재입력
+                                                cout << "잘못된 형식입니다.\n" << endl;
+                                                continue;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            cout << "잘못된 형식입니다.\n" << endl;
+                        }
+
                     }
                 }
             }
             else {
-                //need info
-                while (true) {
-                    cout << "부가정보 등록" << endl;
-                    cout << "1. 메뉴/가격 등록 \n2. 시간/휴무일 등록 \n3. 이전메뉴" << endl;
-                    cout << "보기 선택: ";
-                    int select_menu;
-                    cin >> select_menu;
-                    cin.ignore();//버퍼 제거 
-                    if (select_menu <= 3 && select_menu >= 1) {
-                        if (select_menu == 3) break;
-                        else if (select_menu == 1)
-                        {
-                            if (!current_user->restaurant.at(select - 1).menu.empty()) {
-                                cout << "이미 메뉴가 등록되어 있습니다" << endl;
-                                continue;
-                            }
-                            string M_name, M_price, temp;
-                            string input;
-                            regex M_name_Checker("[a-zA-Z\\s]*");
-                            // regex M_price_Checker("^[1-9]?(,|[0-9])[\\S]*");
-                            while (true) {
-                                cout << "메뉴는 영어 소문자와 공백으로 1~15자 이내로 입력해주세요" << endl;
-                                cout << "2개이상의 공백은 1개로 치환되며 맨 앞, 맨 뒤 공백은 제거됩니다." << endl;
-                                cout << "가격은 100~99999 의 범위로 제한 합니다." << endl;
-                                cout << "쉼표는 맨 앞이 아닌 어디든 등장할 수 있고, 두개를 연속으로 사용할 수 없습니다." << endl;
-                                cout << "각 데이터는 (/)로 구분해서 입력해주세요" << endl;
-                                cout << "메뉴/가격정보: ";
-                                getline(cin, input);
-                                if (!isin0to128(input)) {
-                                    cout << "한국어 입력 금지" << endl;
-                                    continue;
-                                }
-                                char* data_buff = new char[input.size() + 1];
-                                strcpy(data_buff, input.c_str());
-                                //trim(input);//앞뒤공백은 자르기
-                                int scount = 0;
-                                for (int i = 0; i < input.size(); i++) {
-                                    if ((int)input[i] == 47)
-                                        scount++;
-                                }
-                                //cout << "scount : " << scount << endl;
-
-                                if (scount != 1) {
-                                    if (isQuit(input)) break;
-                                    cout << "잘못된 형식입니다." << endl;
-                                    continue;//슬래시 1개 아니면 다시입력받기
-                                }
-                                trim(input);//앞뒤공백은 자르기
-                                if (!isQuit(input)) {
-                                    vector<char*>stv;
-                                    char* ptr1 = strtok(data_buff, "/");
-                                    while (ptr1 != nullptr) {
-                                        stv.push_back(ptr1);
-                                        ptr1 = strtok(NULL, "/");
-                                    }
-                                    if (stv.size() == 2) {
-                                        M_name = (string)stv[0];
-                                        M_price = (string)stv[1];
-                                    }
-                                    else {
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                    trim(M_name);
-                                    trim(M_price);
-                                    if (regex_match(M_name, M_name_Checker))
-                                    {
-                                        if (!oneSpaceLength(M_name)) { continue; }
-                                        for (int i = 0; i < M_name.size(); i++) {
-                                            M_name[i] = tolower(M_name[i]);
-                                        }
-                                        if (!isMoney(M_price)) {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-
-                                        if (M_price.find(",") != -1) {
-                                            while (M_price.find(",") != -1)
-                                                M_price.replace(M_price.find(","), 1, "");
-                                        }
-
-                                        cout << "메뉴이름: " << M_name << endl;
-                                        cout << "메뉴가격: " << M_price << endl;
-                                        if (yesorno()) {
-                                            current_user->restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
-                                            ofstream writeFile;
-
-                                            writeFile.open("Restaurant_Menu.txt", std::ofstream::out | std::ofstream::app);
-                                            if (writeFile.is_open()) {
-                                                string str = current_user->restaurant.at(select - 1).name + "/" + M_name + "/" + M_price + "\n";
-                                                writeFile.write(str.c_str(), str.size());
-                                            }
-                                            else {
-                                                cout << "파일 오픈 오류\n" << endl;
-                                            }
-                                            writeFile.close();
-                                            readR_MenuTextFile();
-                                            //menu.push_back(Menu(price, M_name));
-                                            cout << "등록 완료" << endl;
-                                            break;
-                                        }
-                                        else {
-                                            continue;
-                                        }
-                                    }
-                                    else if (regex_match(M_price, M_name_Checker))
-                                    {
-                                        temp = M_price;
-                                        M_price = M_name;
-                                        M_name = temp;
-                                        if (!oneSpaceLength(M_name)) { continue; }
-                                        for (int i = 0; i < M_name.size(); i++) {
-                                            M_name[i] = tolower(M_name[i]);
-                                        }
-                                        if (!isMoney(M_price)) {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-                                        if (M_price.find(",") != -1) {
-                                            while (M_price.find(",") != -1)
-                                                M_price.replace(M_price.find(","), 1, "");
-                                        }
-                                        cout << "메뉴이름: " << M_name << endl;
-                                        cout << "메뉴가격: " << M_price << endl;
-                                        if (yesorno()) {
-                                            current_user->restaurant.at(select - 1).menu.push_back(Menu(M_name, M_price));
-                                            ofstream writeFile;
-
-                                            writeFile.open("Restaurant_Menu.txt", std::ofstream::out | std::ofstream::app);
-                                            if (writeFile.is_open()) {
-                                                string str = current_user->restaurant.at(select - 1).name + "/" + M_name + "/" + M_price + "\n";
-                                                writeFile.write(str.c_str(), str.size());
-                                            }
-                                            else {
-                                                cout << "파일 오픈 오류\n" << endl;
-                                            }
-                                            writeFile.close();
-                                            readR_MenuTextFile();
-                                            cout << "등록 완료" << endl;
-                                            break;
-                                        }
-                                        else {
-                                            continue;
-                                        }
-                                    }
-                                    else {//둘다 정규식 안맞음->재입력
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                }
-                                else
-                                {
-                                    return;
-                                }
-                            }
-                        }
-                        else if (select_menu == 2)
-                        {
-                            if (!current_user->restaurant.at(select - 1).open_hour.empty()) {
-                                cout << "이미 부가정보가 등록되어 있습니다" << endl;
-                                continue;
-                            }
-                            string hour, close_day, temp;
-                            string input;
-                            regex Time_Checker("([0-9]{1,2})\:([0-9]{1,2})\~([0-9]{1,2})\:([0-9]{1,2})*$");
-                            regex Day_Checker("^[a-zA-Z]+(DAY|DAy|DaY|Day|day|daY|dAY|dAy)$");
-                            while (true) {
-                                cout << "영업시간은 24시간 형식으로 사용하여 주시고 00시와 24시의 혼동을 없애기 위해 24시는 입력받지 않습니다." << endl;
-                                cout << "시작 시간과 종료 시간은 특수문자(~)로 구분되며 각 시간의 시와 분은 (:)로 구분됩니다." << endl;
-                                cout << "공백 입력은 금지됩니다." << endl;
-                                cout << "휴무일은 영문 소문자로 monday, tuesday, wednesday thursday friday saturday sunday 중 하나를 입력받습니다." << endl;
-                                cout << "영업시간은 필수로 등록해야 하지만 휴무일은 등록하지 않아도 됩니다." << endl;
-                                cout << "각 데이터는 (/)로 구분해서 입력해주세요" << endl;
-                                cout << "시간/휴무정보: ";
-                                getline(cin, input);
-                                if (!isin0to128(input)) {
-                                    cout << "한국어 입력 금지" << endl;
-                                    continue;
-                                }
-                                char* data_buff = new char[input.size() + 1];
-                                strcpy(data_buff, input.c_str());
-                                //trim(input);//앞뒤공백은 자르기
-                                int scount = 0;
-                                for (int i = 0; i < input.size(); i++) {
-                                    if ((int)input[i] == 47)
-                                        scount++;
-                                }
-                                //cout << "scount : " << scount << endl;
-
-                                if (scount != 1) {
-                                    if (isQuit(input)) break;
-                                    smatch match;
-                                    if (regex_match(input, match, Time_Checker)) {
-                                        if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
-                                        {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-
-                                        if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
-                                        {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-                                        cout << "영업시간: " << input << endl;
-                                        cout << "휴무일 없음" << endl;
-                                        if (yesorno()) { //match 대신 temp로 바꿔서 전부 바꿔서 넣어야함 
-                                            string temp[4];
-                                            temp->clear();
-                                            for (int i = 0; i < 4; i++) {
-                                                temp[i] = match.str(i + 1);
-                                                if (match.str(i + 1).size() == 1) {
-                                                    temp[i] = "0" + match.str(i + 1);
-                                                }
-                                            }
-                                            current_user->restaurant.at(select - 1).close_day.push_back("\0");
-                                            current_user->restaurant.at(select - 1).close_day.push_back(to_string(-1));
-                                            //휴무일이랑 인덱스 저장
-                                            if (stoi(match.str(1)) >= stoi(match.str(3)) && stoi(match.str(2)) >= stoi(match.str(4))) {
-                                                //앞시간이 뒷시간 보다 크면나누어 저장
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(to_string(-1));
-
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(to_string(-1));
-
-                                                string time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
-                                                string adr = current_user->restaurant.at(select - 1).address;
-                                                string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "\n";
-                                                ofstream writeFile;
-
-                                                writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
-                                                if (writeFile.is_open()) {
-                                                    writeFile.write(str.c_str(), str.size());
-                                                }
-                                                else {
-                                                    cout << "파일 오픈 오류\n" << endl;
-                                                }
-                                                writeFile.close();
-                                            }
-                                            else {
-                                                //자정을 포함하지 않는 시간
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                current_user->restaurant.at(select - 1).open_hour.push_back(to_string(-1));
-                                                string time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
-                                                string adr = current_user->restaurant.at(select - 1).address;
-                                                string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "\n";
-
-                                                ofstream writeFile;
-
-                                                writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
-                                                if (writeFile.is_open()) {
-                                                    writeFile.write(str.c_str(), str.size());
-                                                }
-                                                else {
-                                                    cout << "파일 오픈 오류\n" << endl;
-                                                }
-                                                writeFile.close();
-                                            }
-                                            readR_InfoTextFile();
-                                            cout << "등록 완료" << endl;
-                                            break;
-                                        }
-                                        else {
-                                            continue;
-                                        }
-                                    }
-                                    else {
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                    cout << "잘못된 형식입니다." << endl;
-                                    continue;//슬래시 1개 아니면 다시입력받기
-                                }
-                                trim(input);//앞뒤공백은 자르기
-                                if (!isQuit(input)) {
-                                    vector<char*>stv;
-                                    char* ptr1 = strtok(data_buff, "/");
-                                    while (ptr1 != nullptr) {
-                                        stv.push_back(ptr1);
-                                        ptr1 = strtok(NULL, "/");
-                                    }
-                                    if (stv.size() == 2) {
-                                        hour = (string)stv[0];
-                                        close_day = (string)stv[1];
-                                    }
-                                    else {
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                    trim(hour);
-                                    trim(close_day);
-                                    smatch match;
-                                    if (regex_match(close_day, Day_Checker))
-                                    {
-                                        for (int i = 0; i < close_day.size(); i++) {
-                                            close_day[i] = tolower(close_day[i]);
-                                        }
-
-                                        if (regex_match(hour, match, Time_Checker)) {
-                                            if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
-                                            {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-
-                                            if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
-                                            {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            cout << "영업시간: " << hour << endl;
-                                            cout << "휴무일: " << close_day << endl;
-                                            if (yesorno()) {
-                                                string temp[4];
-                                                temp->clear();
-                                                for (int i = 0; i < 4; i++) {
-                                                    temp[i] = match.str(i + 1);
-                                                    if (match.str(i + 1).size() == 1) {
-                                                        temp[i] = "0" + match.str(i + 1);
-                                                    }
-                                                }
-
-                                                current_user->restaurant.at(select - 1).close_day.push_back(close_day);
-                                                int i = 0;
-                                                for (int i = 0; i < 7; i++) {
-                                                    if (humooil[i] == close_day) {
-                                                        current_user->restaurant.at(select - 1).close_day.push_back(to_string(i));
-                                                        break;
-                                                    }
-                                                } //휴무일이랑 인덱스 저장
-                                                if (stoi(match.str(1)) >= stoi(match.str(3)) && stoi(match.str(2)) >= stoi(match.str(4))) {
-                                                    //앞시간이 뒷시간 보다 크면나누어 저장
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(to_string(i));
-                                                    cout << to_string(i) << endl;
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(to_string((i + 1) % 7));
-                                                    string temp[4];
-                                                    for (int i = 0; i < 4; i++) {
-                                                        temp[i] = match.str(i + 1);
-                                                        if (match.str(i + 1).size() == 1) {
-                                                            temp[i] = "0" + match.str(i + 1);
-                                                        }
-                                                    }
-                                                    string time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
-                                                    string adr = current_user->restaurant.at(select - 1).address;
-                                                    string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "/" + close_day + "\n";
-                                                    ofstream writeFile;
-
-                                                    writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
-                                                    if (writeFile.is_open()) {
-                                                        writeFile.write(str.c_str(), str.size());
-                                                    }
-                                                    else {
-                                                        cout << "파일 오픈 오류\n" << endl;
-                                                    }
-                                                    writeFile.close();
-                                                }
-                                                else {
-                                                    //자정을 포함하지 않는 시간
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(to_string(i));
-                                                    string time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
-                                                    string adr = current_user->restaurant.at(select - 1).address;
-                                                    string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "/" + close_day + "\n";
-                                                    ofstream writeFile;
-                                                    writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
-                                                    if (writeFile.is_open()) {
-                                                        writeFile.write(str.c_str(), str.size());
-                                                    }
-                                                    else {
-                                                        cout << "파일 오픈 오류\n" << endl;
-                                                    }
-                                                    writeFile.close();
-                                                }
-                                                readR_InfoTextFile();
-                                                cout << "등록 완료" << endl;
-                                                break;
-                                            }
-                                            else {
-                                                continue;
-                                            }
-                                        }
-                                        else {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-                                    }
-                                    else if (regex_match(hour, Day_Checker))
-                                    {
-                                        temp = hour;
-                                        hour = close_day;
-                                        close_day = temp;
-                                        for (int i = 0; i < close_day.size(); i++) {
-                                            close_day[i] = tolower(close_day[i]);
-                                        }
-
-                                        if (regex_match(hour, match, Time_Checker)) {
-                                            if (stoi(match.str(1)) == stoi(match.str(3)) && stoi(match.str(2)) == stoi(match.str(4)))
-                                            {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-
-                                            if (!(stoi(match.str(1)) < 24 && stoi(match.str(3)) < 24 && stoi(match.str(2)) < 60 && stoi(match.str(4)) < 60))
-                                            {
-                                                cout << "잘못된 형식입니다." << endl;
-                                                continue;
-                                            }
-                                            cout << "영업시간: " << hour << endl;
-                                            cout << "휴무일: " << close_day << endl;
-                                            if (yesorno()) {
-                                                string temp[4];
-                                                temp->clear();
-                                                for (int i = 0; i < 4; i++) {
-                                                    temp[i] = match.str(i + 1);
-                                                    if (match.str(i + 1).size() == 1) {
-                                                        temp[i] = "0" + match.str(i + 1);
-                                                    }
-                                                }
-
-                                                current_user->restaurant.at(select - 1).close_day.push_back(close_day);
-                                                int i = 0;
-                                                for (int i = 0; i < 7; i++) {
-                                                    if (humooil[i] == close_day) {
-                                                        current_user->restaurant.at(select - 1).close_day.push_back(to_string(i));
-                                                        break;
-                                                    }
-                                                } //휴무일이랑 인덱스 저장
-                                                if (stoi(match.str(1)) >= stoi(match.str(3)) && stoi(match.str(2)) >= stoi(match.str(4))) {
-                                                    //앞시간이 뒷시간 보다 크면나누어 저장
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("23");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("59");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(to_string(i));
-                                                    cout << to_string(i) << endl;
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back("00");
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(to_string((i + 1) % 7));
-                                                    string time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
-                                                    string adr = current_user->restaurant.at(select - 1).address;
-                                                    string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "/" + close_day + "\n";
-
-                                                    ofstream writeFile;
-
-                                                    writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
-                                                    if (writeFile.is_open()) {
-                                                        writeFile.write(str.c_str(), str.size());
-                                                    }
-                                                    else {
-                                                        cout << "파일 오픈 오류\n" << endl;
-                                                    }
-                                                    writeFile.close();
-                                                }
-                                                else {
-                                                    //자정을 포함하지 않는 시간
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[0]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[1]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[2]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(temp[3]);
-                                                    current_user->restaurant.at(select - 1).open_hour.push_back(to_string(i));
-                                                    string time = temp[0] + ":" + temp[1] + "~23:59,00:00~" + temp[2] + ":" + temp[3];
-                                                    string adr = current_user->restaurant.at(select - 1).address;
-                                                    string str = current_user->restaurant.at(select - 1).name + "/" + adr + "/" + time + "/" + close_day + "\n";
-
-                                                    ofstream writeFile;
-
-                                                    writeFile.open("Restaurant_Info.txt", std::ofstream::out | std::ofstream::app);
-                                                    if (writeFile.is_open()) {
-                                                        writeFile.write(str.c_str(), str.size());
-                                                    }
-                                                    else {
-                                                        cout << "파일 오픈 오류\n" << endl;
-                                                    }
-                                                    writeFile.close();
-                                                }
-                                                readR_InfoTextFile();
-                                                cout << "등록 완료" << endl;
-                                                break;
-                                            }
-                                            else {
-                                                continue;
-                                            }
-                                        }
-                                        else {
-                                            cout << "잘못된 형식입니다." << endl;
-                                            continue;
-                                        }
-                                    }
-                                    else {//둘다 정규식 안맞음->재입력
-                                        cout << "잘못된 형식입니다." << endl;
-                                        continue;
-                                    }
-                                }
-                                else
-                                {
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    else{
-                        cin.clear();
-                        cin.ignore(INT_MAX, '\n');
-                        cout << "잘못된 형식입니다." << endl;
-                    }
-                        
-                }
+                cout << "잘못된 형식입니다.\n\n";
             }
         }
         else {
-            cin.clear();
-            cin.ignore(INT_MAX, '\n');
-            cout << "잘못된 형식입니다." << endl;
-
+            cout << "잘못된 형식입니다.\n" << endl;
+            continue;
         }
     }
 }
