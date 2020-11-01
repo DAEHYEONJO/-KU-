@@ -143,9 +143,11 @@ int Manager::logIn()
             cout << "한국어 입력 금지\n" << endl;
             continue;
         }
-        if (isSpace(test_id)) continue;
+        
         else {
+            trim(test_id);
             if (!isQuit(test_id)) {
+                if (isSpace(test_id)) continue;
                 if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
                     if (regex_match(test_id, idChecker1)) {
                         readInfoTextFile();//저장되어있는거 읽어오기.
@@ -169,6 +171,7 @@ int Manager::logIn()
                                     cout << "한국어 입력 금지\n" << endl;
                                     continue;
                                 }
+                                trim(test_pw);
                                 if (isQuit(test_pw)) break;
                                 if (regex_match(test_pw, pwChecker)) {//pw형식 옳바름
                                     if (!strcmp(user[count].pw.c_str(), test_pw.c_str())) {
@@ -203,8 +206,6 @@ int Manager::logIn()
                                     cout << "잘못된 형식입니다.\n" << endl;
                                 }
                             }
-
-
                         }
                     }
                     else { cout << "잘못된 형식입니다.\n" << endl; }
@@ -338,7 +339,7 @@ bool Manager::isDay(string str)
                 }
             }
             if (i == 7) {
-                cout << "\nmonday ~ sunday 중 입력바랍니다.\n" << endl;
+                //cout << "\nmonday ~ sunday 중 입력바랍니다.\n" << endl;
                 return false;
             }
         }
@@ -385,7 +386,7 @@ bool Manager::isAddress(string str)
                 }
             }
             if (i == 10) {
-                cout << "\nhwayang1dong~hwayang10dong 중 입력 바랍니다.\n" << endl;
+                //cout << "\nhwayang1dong~hwayang10dong 중 입력 바랍니다.\n" << endl;
                 return false;
             }
         }
