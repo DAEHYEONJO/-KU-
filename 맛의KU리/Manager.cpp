@@ -58,11 +58,11 @@ int Manager::signUp()
         if (!isin0to128(test_id)) {
             cout << "한국어 입력 금지\n" << endl;
             continue;
-        }
-
-        if (isSpace(test_id)) continue;
+        }        
         else {
+            trim(test_id);
             if (!isQuit(test_id)) {//quit 아니면
+                if (isSpace(test_id)) continue;
                 if ((test_id.size() >= 6) && (test_id.size() <= 10)) {
                     if (regex_match(test_id, idChecker1)) {
                         //cout << "조건맞음\n" << endl;
