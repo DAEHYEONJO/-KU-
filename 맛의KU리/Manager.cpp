@@ -85,6 +85,8 @@ int Manager::signUp()
                                     cout << "한국어 입력 금지\n" << endl;
                                     continue;
                                 }
+                                trim(test_pw);
+                                if (isQuit(test_pw)) { break; }
                                 if (regex_match(test_pw, pwChecker)) {
                                     cout << "회원가입 완료\n" << endl;
                                     //info.txt에 해당 아이디 패스워드 추가하기.
@@ -205,6 +207,7 @@ int Manager::logIn()
 
                         }
                     }
+                    else { cout << "잘못된 형식입니다.\n" << endl; }
                 }
                 else {
                     cout << "길이 6~10으로 입력하세요.\n" << endl;
@@ -611,6 +614,7 @@ void Manager::registerRestaurant()
                 R_address = (string)stv[2];
             }
             else {
+                cout << "잘못된 형식입니다.\n" << endl;
                 continue;
             }
 
@@ -1327,7 +1331,7 @@ void Manager::ManageRestaurant()
                                         current_user->restaurant.at(select - 1).print_menu();
                                         cout << "\n메뉴/(가격) 입력: ";
                                         getline(cin, input);
-
+                                        trim(input);
                                         if (isQuit(input)) break;
                                         if (!isin0to128(input)) {
                                             cout << "한국어 입력 금지\n" << endl;
@@ -1401,6 +1405,7 @@ void Manager::ManageRestaurant()
                                             }
 
                                         }
+                                        trim(input);
                                         if (!isQuit(input) && scount == 1) {
                                             vector<char*>stv;
                                             char* ptr1 = strtok(data_buff, "/");
@@ -2480,13 +2485,14 @@ void Manager::ManageRestaurant()
                                                 scount++;
                                         }
                                         //cout << "scount : " << scount << endl;
-
+                                        //이거순서바꿈trim
+                                        trim(input);//앞뒤공백은 자르기
                                         if (scount != 1) {
                                             if (isQuit(input)) break;
                                             cout << "잘못된 형식입니다.\n" << endl;
                                             continue;//슬래시 1개 아니면 다시입력받기
                                         }
-                                        trim(input);//앞뒤공백은 자르기
+                                        
                                         if (!isQuit(input)) {
                                             vector<char*>stv;
                                             char* ptr1 = strtok(data_buff, "/");
@@ -2631,6 +2637,7 @@ void Manager::ManageRestaurant()
                                         //cout << "scount : " << scount << endl;
 
                                         if (scount != 1) {
+                                            trim(input);//앞뒤공백은 자르기
                                             if (isQuit(input)) break;
                                             smatch match;
                                             if (regex_match(input, match, Time_Checker)) {
